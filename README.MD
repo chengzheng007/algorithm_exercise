@@ -1,3 +1,3 @@
-##### algorithm exercise
+## algorithm exercise
 
 only exercise
