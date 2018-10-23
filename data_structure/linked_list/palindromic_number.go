@@ -13,7 +13,14 @@ type Node struct {
 }
 
 func main() {
-	list := []int{1,2,2,1}
+	//list := []int{1}
+	//list := []int{1, 1}
+	//list := []int{1, 2}
+	//list := []int{1, 2, 1}
+	//list := []int{1, 1, 1, 1}
+	//list := []int{1,2,3,4}
+	list := []int{1, 2, 3, 4, 5}
+
 	head, err := initNodeList(list)
 	if err != nil {
 		fmt.Printf("initNodeList() error(%v)\n", err)
@@ -21,7 +28,7 @@ func main() {
 	}
 	print(head)
 	fmt.Printf("is isPalindromic Number? %t\n", isPalindromic(head))
-	print(head)
+	//print(head)
 }
 
 // 带头结点
@@ -70,12 +77,10 @@ func isPalindromic(head *Node) bool {
 		if pSlow.Next != nil {
 			pSlow = pSlow.Next
 		}
-		if pSlow.Next != nil  {
+		if pSlow.Next != nil {
 			pFast = pSlow.Next.Next
 		}
 	}
-
-	fmt.Println("== reverse last half list ==")
 
 	// 从中间节点往后反转链表
 	// 循环结束，p是尾节点
@@ -87,10 +92,6 @@ func isPalindromic(head *Node) bool {
 		p = q
 		q = r
 	}
-	fmt.Printf("p val:%d, next:%p, addr:%p\n", p.Data, p.Next, p)
-	
-
-	fmt.Println("== judge is palindromic or not ==")
 
 	// 从两端向中间遍历比较
 	q = head.Next
@@ -105,7 +106,7 @@ func isPalindromic(head *Node) bool {
 		q = q.Next
 		tail = tail.Next
 	}
-	
+
 	// 将中间到尾节点部分调整回来
 	tail = p
 	q = p.Next
@@ -114,7 +115,7 @@ func isPalindromic(head *Node) bool {
 			q.Next = p
 			break
 		}
-		
+
 		node := q.Next
 		q.Next = p
 		p = q
@@ -125,5 +126,5 @@ func isPalindromic(head *Node) bool {
 	tail.Next = nil
 
 	return flag
-	
+
 }
