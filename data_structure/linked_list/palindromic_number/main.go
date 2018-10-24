@@ -19,7 +19,7 @@ func main() {
 	//list := []int{1, 2, 1}
 	//list := []int{1, 1, 1, 1}
 	//list := []int{1,2,3,4}
-	list := []int{1, 2, 3, 4, 5}
+	list := []int{1, 2, 3, 2, 1}
 
 	head, err := initNodeList(list)
 	if err != nil {
@@ -128,3 +128,4 @@ func isPalindromic(head *Node) bool {
 	return flag
 
 }
+
