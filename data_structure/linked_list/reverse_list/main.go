@@ -6,6 +6,7 @@ import (
 )
 
 // 单链表倒置
+// 时间复杂度：O(n)
 
 type Node struct {
 	Data int

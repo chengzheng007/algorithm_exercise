@@ -6,6 +6,7 @@ import (
 )
 
 // 回文数-单链表判断
+// 时间复杂度：O(n)
 
 type Node struct {
 	Data int
@@ -126,6 +127,5 @@ func isPalindromic(head *Node) bool {
 	tail.Next = nil
 
 	return flag
-
 }
 

@@ -6,6 +6,7 @@ import (
 )
 
 // 删除单链表倒数第n个节点
+// 时间复杂度：O(n)，需遍历
 
 type Node struct {
 	Data int
@@ -63,6 +64,7 @@ func delLastNthNode(head *Node, n int) bool {
 		return false
 	}
 	
+	// p先走n步，达到第n个节点
 	p := head
 	for i := 0; i < n; i++ {
 		p = p.Next
@@ -72,18 +74,17 @@ func delLastNthNode(head *Node, n int) bool {
 	}
 
 	fmt.Printf("p value:%d, next:%p, addr:%p\n", p.Data, p.Next, p)
-	
 
-	privDel := head
+	prevDel := head
 	for p.Next != nil {
 		p = p.Next
-		privDel = privDel.Next
+		prevDel = prevDel.Next
 	}
-	// p走到尾节点，privDel为待删除节点的前驱节点
-	fmt.Printf("privDel value:%d, next:%p, addr:%p\n", privDel.Data, privDel.Next, privDel)
+	// p走到尾节点，prevDel为待删除节点的前驱节点
+	fmt.Printf("prevDel value:%d, next:%p, addr:%p\n", prevDel.Data, prevDel.Next, prevDel)
 	
 	// 将待删除节点摘除
-	privDel.Next = privDel.Next.Next
+	prevDel.Next = prevDel.Next.Next
 	
 	return true
 }
