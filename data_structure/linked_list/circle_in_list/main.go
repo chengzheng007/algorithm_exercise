@@ -96,7 +96,6 @@ func isCircleLinkedList(head *Node) bool {
 			return false
 		}
 
-
 		if pSlow != nil {
 			pSlow = pSlow.Next
 		}
