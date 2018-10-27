@@ -36,6 +36,7 @@ func main() {
 	mergeSequenceList(head1, head2)
 	fmt.Println("list1:")
 	print(head1)
+
 }
 
 // 带头结点
