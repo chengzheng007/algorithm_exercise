@@ -22,8 +22,9 @@ func main() {
 	}
 	print(head)
 	fmt.Println("===============")
-
-	delRet := delLastNthNode(head, 4)
+	n := 4
+	fmt.Printf("delete last %dth node...\n", n)
+	delRet := delLastNthNode(head, n)
 	fmt.Println("after delete:")
 	print(head)
 	fmt.Printf("delete success? %t\n", delRet)
@@ -73,7 +74,7 @@ func delLastNthNode(head *Node, n int) bool {
 		}
 	}
 
-	fmt.Printf("p value:%d, next:%p, addr:%p\n", p.Data, p.Next, p)
+	fmt.Printf("the first nth node: p value:%d, next:%p, addr:%p\n", p.Data, p.Next, p)
 
 	prevDel := head
 	for p.Next != nil {
@@ -84,7 +85,9 @@ func delLastNthNode(head *Node, n int) bool {
 	fmt.Printf("prevDel value:%d, next:%p, addr:%p\n", prevDel.Data, prevDel.Next, prevDel)
 	
 	// 将待删除节点摘除
-	prevDel.Next = prevDel.Next.Next
-	
+	tmp := prevDel.Next
+	prevDel.Next = tmp.Next
+	tmp = nil
+
 	return true
 }
