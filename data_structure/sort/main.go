@@ -5,28 +5,31 @@ import "fmt"
 func main() {
 	list := []int{5,4,3,3,2,1,9,0}
 	bubbleSort(list)
-	fmt.Println("bubbleSort:", list)
+	//fmt.Println("bubbleSort:", list)
 
 	list = []int{2,6,1,6,-5}
-	fmt.Printf("origin list:%v\n", list)
 	insertSort(list)
-	fmt.Println("insertSort:", list)
+	//fmt.Println("insertSort:", list)
+
+	list = []int{5,2,6,1,6,-5}
+	binInsertSort(list)
+	fmt.Println("binInsertSort:", list)
 
 	list = []int{2,6,1,6,-5}
 	selectSort(list)
-	fmt.Println("selectSort:", list)
+	//fmt.Println("selectSort:", list)
 
 	list = []int{2,35,1429,64,5,10,12,30,-5}
 	shellSort(list)
-	fmt.Println("shellSort:", list)
+	//fmt.Println("shellSort:", list)
 
 	list = []int{2,-5,10,3,10,12}
 	quickSort(list, 0, len(list)-1)
-	fmt.Println("quickSort:", list)
+	//fmt.Println("quickSort:", list)
 
-	list = []int{2,-5,10,3,10,12}
-
-	mergeSort(list, 0, len(list)-1)
+	list = []int{2,-5,6,1,3}
+	fmt.Println("list:", list)
+	mergeSort(list, 0, len(list))
 	fmt.Println("mergeSort:", list)
 }
 
@@ -69,6 +72,32 @@ func insertSort(list []int) {
 			}
 		}
 		list[j+1] = temp
+	}
+}
+
+// 二分插入排序
+func binInsertSort(list []int) {
+	size := len(list)
+	if size <= 1 {
+		return
+	}
+	for i := 1; i < size; i++ {
+		temp := list[i]
+		l := 0
+		r := i - 1
+		for l <= r {
+			mid := (l+r)/2
+			if temp < list[mid] {
+				r = mid - 1
+			} else {
+				l = mid + 1
+			}
+		}
+		// l为最终数据插入位置, l及右边数据右移
+		for j := i-1; j >= l; j-- {
+			list[j+1] = list[j]
+		}
+		list[l] = temp
 	}
 }
 
@@ -147,13 +176,15 @@ func mergeSort(list []int, l, r int) {
 	if l >= r {
 		return
 	}
+
 	mid := (l+r)/2
+	
 	// 分治递归
 	mergeSort(list, l, mid)
 	mergeSort(list, mid+1, r)
 	// 将两个部分合并到一起
 	// 排序实际在该合并函数中完成
-	fmt.Println("mid:", mid)
+	//fmt.Printf("befeor merge == l:%d, mid:%d, r:%d, list[%d:%d]:%v, list[%d:%d]:%v\n", l, mid, r, l, mid, list[l:mid], mid, r, list[mid:r])
 	merge(list, l, r, list[l:mid], list[mid:r])
 }
 
@@ -162,7 +193,7 @@ func merge(list []int, l, r int, preList, postList []int,) {
 	j := 0
 	p := 0
 	tmp := make([]int, r-l)
-	fmt.Printf("r(%d)-l(%d)=>%d\n", r, l, r-l)
+	//fmt.Printf("r(%d)-l(%d)=>%d\n", r, l, r-l)
 	for i < len(preList) && j < len(postList) {
 		if preList[i] <= postList[j] {
 			tmp[p] = preList[i]
@@ -174,18 +205,18 @@ func merge(list []int, l, r int, preList, postList []int,) {
 		p++
 	}
 
-	fmt.Println("tmp merge two sametime:", tmp)
+	//fmt.Println("tmp merge two sametime:", tmp)
 
-	fmt.Println("p=>", p, "i=>", i, "j=>", j)
+	//fmt.Println("p=>", p, "i=>", i, "j=>", j)
 	if i < len(preList) {
 		copy(tmp[p:], preList[i:])
-		fmt.Printf("preList tmp:%v, preList[%d:]:%v\n", tmp, i, preList[i:])
+		//fmt.Printf("preList tmp:%v, preList[%d:]:%v\n", tmp, i, preList[i:])
 	} else if j < len(postList) {
 		copy(tmp[p:], postList[j:])
-		fmt.Printf("postList tmp:%v, postList[%d:]:%v\n", tmp, j, postList[j:])
+		//fmt.Printf("postList tmp:%v, postList[%d:]:%v\n", tmp, j, postList[j:])
 	}
 
-	fmt.Println("end tmp:", tmp)
+	//fmt.Println("end tmp:", tmp)
 	copy(list[l:r], tmp)
-	fmt.Printf("list[%d:%d]:%v ,list:%v, preList:%v, postList:%v\n", l, r, list[l:r], list, preList, postList)
+	//fmt.Printf("list[%d:%d]:%v ,list:%v, preList:%v, postList:%v\n", l, r, list[l:r], list, preList, postList)
 }
