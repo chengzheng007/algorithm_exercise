@@ -27,10 +27,17 @@ func main() {
 	quickSort(list, 0, len(list)-1)
 	//fmt.Println("quickSort:", list)
 
-	list = []int{2,-5,6,1,3}
-	fmt.Println("list:", list)
+	list = []int{2,-5,6,1,3,2}
 	mergeSort(list, 0, len(list))
 	fmt.Println("mergeSort:", list)
+
+	list = []int{2,5,3,0,2,3,0,3,9,1}
+	if err := countingSort(list); err != nil {
+		fmt.Printf("countingSort() error(%v)\n", err)
+	} else {
+		fmt.Println("countingSort:", list)
+	}
+
 }
 
 // 冒泡
@@ -171,7 +178,7 @@ func partion(list []int, l, r int) int {
 	return i
 }
 
-// 归并排序
+// 归并排序 -【目前仅能处理个数为「偶数」的数组】
 func mergeSort(list []int, l, r int) {
 	if l >= r {
 		return
@@ -208,15 +215,65 @@ func merge(list []int, l, r int, preList, postList []int,) {
 	//fmt.Println("tmp merge two sametime:", tmp)
 
 	//fmt.Println("p=>", p, "i=>", i, "j=>", j)
+
 	if i < len(preList) {
-		copy(tmp[p:], preList[i:])
+		//copy(tmp[p:], preList[i:])
+		for ; i < len(preList); i++ {
+			tmp[p] = preList[i]
+			p++
+		}
 		//fmt.Printf("preList tmp:%v, preList[%d:]:%v\n", tmp, i, preList[i:])
 	} else if j < len(postList) {
-		copy(tmp[p:], postList[j:])
+		//copy(tmp[p:], postList[j:])
+		for ; j < len(postList); j++ {
+			tmp[p] = postList[j]
+			p++
+		}
 		//fmt.Printf("postList tmp:%v, postList[%d:]:%v\n", tmp, j, postList[j:])
 	}
 
 	//fmt.Println("end tmp:", tmp)
 	copy(list[l:r], tmp)
 	//fmt.Printf("list[%d:%d]:%v ,list:%v, preList:%v, postList:%v\n", l, r, list[l:r], list, preList, postList)
+}
+
+// 计数排序 - 【这里数组中只允许非负数】
+// 适用于数据大小范围足够小的情况
+func countingSort(list []int) error {
+	size := len(list)
+	if size <= 1 {
+		return nil
+	}
+
+	// 遍历找到最大值
+	max := -1
+	for _, val := range list {
+		if val < 0 {
+			return fmt.Errorf("data can't be less than zero")
+		}
+		if max < val {
+			max = val
+		}
+	}
+
+	// 申请max+1个容量的数组，计算数据个数
+	c := make([]int, max+1)
+	for _, val := range list {
+		c[val]++
+	}
+
+	// 将c中的数据个数累加
+	for i := 1; i < max+1; i++ {
+		c[i] = c[i] + c[i-1]
+	}
+
+	// 反向遍历，将排序数据放入排序列表
+	rankList := make([]int, size)
+	for i := size-1; i >= 0; i-- {
+		rankList[c[list[i]]-1] = list[i]
+		c[list[i]]--
+	}
+
+	copy(list, rankList)
+	return nil
 }
