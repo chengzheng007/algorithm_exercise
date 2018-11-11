@@ -27,8 +27,8 @@ func main() {
 	quickSort(list, 0, len(list)-1)
 	//fmt.Println("quickSort:", list)
 
-	list = []int{2,-5,6,1,3,2}
-	mergeSort(list, 0, len(list))
+	list = []int{2,-5,6,1,3}
+	mergeSort(list, 0, len(list)-1)
 	fmt.Println("mergeSort:", list)
 
 	list = []int{2,5,3,0,2,3,0,3,9,1}
@@ -178,7 +178,7 @@ func partion(list []int, l, r int) int {
 	return i
 }
 
-// 归并排序 -【目前仅能处理个数为「偶数」的数组】
+// 归并排序
 func mergeSort(list []int, l, r int) {
 	if l >= r {
 		return
@@ -191,50 +191,36 @@ func mergeSort(list []int, l, r int) {
 	mergeSort(list, mid+1, r)
 	// 将两个部分合并到一起
 	// 排序实际在该合并函数中完成
-	//fmt.Printf("befeor merge == l:%d, mid:%d, r:%d, list[%d:%d]:%v, list[%d:%d]:%v\n", l, mid, r, l, mid, list[l:mid], mid, r, list[mid:r])
-	merge(list, l, r, list[l:mid], list[mid:r])
+	merge(list, l, mid, r)
 }
 
-func merge(list []int, l, r int, preList, postList []int,) {
-	i := 0
-	j := 0
-	p := 0
-	tmp := make([]int, r-l)
-	//fmt.Printf("r(%d)-l(%d)=>%d\n", r, l, r-l)
-	for i < len(preList) && j < len(postList) {
-		if preList[i] <= postList[j] {
-			tmp[p] = preList[i]
+func merge(list []int, l, mid, r int) {
+	tmpArr := make([]int, r-l+1)
+
+	i := l
+	j := mid+1
+	k := 0
+	// slice需要访问到最左或最右的元素
+	for ; i <= mid && j <= r; k++ {
+		if list[i] < list[j] {
+			tmpArr[k] = list[i]
 			i++
 		} else {
-			tmp[p] = postList[j]
+			tmpArr[k] = list[j]
 			j++
 		}
-		p++
+	}
+	
+	for ; i <= mid; i++ {
+		tmpArr[k] = list[i]
+		k++
 	}
 
-	//fmt.Println("tmp merge two sametime:", tmp)
-
-	//fmt.Println("p=>", p, "i=>", i, "j=>", j)
-
-	if i < len(preList) {
-		//copy(tmp[p:], preList[i:])
-		for ; i < len(preList); i++ {
-			tmp[p] = preList[i]
-			p++
-		}
-		//fmt.Printf("preList tmp:%v, preList[%d:]:%v\n", tmp, i, preList[i:])
-	} else if j < len(postList) {
-		//copy(tmp[p:], postList[j:])
-		for ; j < len(postList); j++ {
-			tmp[p] = postList[j]
-			p++
-		}
-		//fmt.Printf("postList tmp:%v, postList[%d:]:%v\n", tmp, j, postList[j:])
+	for ; j <= r; j++ {
+		tmpArr[k] = list[j]
+		k++
 	}
-
-	//fmt.Println("end tmp:", tmp)
-	copy(list[l:r], tmp)
-	//fmt.Printf("list[%d:%d]:%v ,list:%v, preList:%v, postList:%v\n", l, r, list[l:r], list, preList, postList)
+	copy(list[l:r+1], tmpArr)
 }
 
 // 计数排序 - 【这里数组中只允许非负数】
