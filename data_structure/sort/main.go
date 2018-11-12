@@ -5,11 +5,11 @@ import "fmt"
 func main() {
 	list := []int{5,4,3,3,2,1,9,0}
 	bubbleSort(list)
-	//fmt.Println("bubbleSort:", list)
+	fmt.Println("bubbleSort:", list)
 
 	list = []int{2,6,1,6,-5}
 	insertSort(list)
-	//fmt.Println("insertSort:", list)
+	fmt.Println("insertSort:", list)
 
 	list = []int{5,2,6,1,6,-5}
 	binInsertSort(list)
@@ -17,15 +17,15 @@ func main() {
 
 	list = []int{2,6,1,6,-5}
 	selectSort(list)
-	//fmt.Println("selectSort:", list)
+	fmt.Println("selectSort:", list)
 
 	list = []int{2,35,1429,64,5,10,12,30,-5}
 	shellSort(list)
-	//fmt.Println("shellSort:", list)
+	fmt.Println("shellSort:", list)
 
 	list = []int{2,-5,10,3,10,12}
 	quickSort(list, 0, len(list)-1)
-	//fmt.Println("quickSort:", list)
+	fmt.Println("quickSort:", list)
 
 	list = []int{2,-5,6,1,3}
 	mergeSort(list, 0, len(list)-1)
@@ -38,6 +38,14 @@ func main() {
 		fmt.Println("countingSort:", list)
 	}
 
+	list = []int{36,5,16,98,95,47,32,36,48,10}
+	if err := radixSort(list); err != nil {
+		fmt.Printf("radixSort() error(%v)\n", err)
+	} else {
+		fmt.Println("radixSort:", list)
+	}
+
+	
 }
 
 // 冒泡
@@ -261,5 +269,50 @@ func countingSort(list []int) error {
 	}
 
 	copy(list, rankList)
+	return nil
+}
+
+// 基数排序 - 【以最大数字为两位数为例】
+func radixSort(list []int) error {
+	size := len(list)
+	if size <= 1 {
+		if list[0] < 0 || list[0] >= 100 {
+			return fmt.Errorf("num in list should between 0 and 99")
+		}
+		return nil
+	}
+
+	// 分配10个桶，0...9，每个桶可动态扩容
+	bucket := make([][]int, 10)  // 个位数
+		
+	// 第一次按低位遍历分配
+	for _, num := range list {
+		if num < 0 || num >= 100 {
+			return fmt.Errorf("num in list should between 0 and 99")
+		}
+		bucket[num%10] = append(bucket[num%10], num)
+	}
+
+	i := 0
+	for _, elems := range bucket {
+		for _, num := range elems {
+			list[i] = num
+			i++
+		}
+	}
+
+	// 第二次按高位遍历分配到桶(这里桶元素类型和长度相等)
+	bucket = make([][]int, 10)
+	for _, num := range list {
+		bucket[num/10] = append(bucket[num/10], num)
+	}
+
+	i = 0
+	for _, elems := range bucket {
+		for _, num := range elems {
+			list[i] = num
+			i++
+		}
+	}
 	return nil
 }
