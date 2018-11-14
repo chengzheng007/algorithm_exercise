@@ -48,12 +48,41 @@ func main() {
 		fmt.Printf("sqrtByBinSearch(%f, %f) ret(%f)\n", number, threshold, ret)
 	}
 
+	ret, err = newtonIterationSqrt(number, threshold)
+	if err != nil {
+		fmt.Printf("newtonIterationSqrt(%f, %f) error(%v)\n", number, threshold, err)
+	} else {
+		fmt.Printf("newtonIterationSqrt(%f, %f) ret(%f)\n", number, threshold, ret)
+	}
+
+	
 	number = 0.008
 	ret, err = sqrtByBinSearch(number, threshold)
 	if err != nil {
 		fmt.Printf("sqrtByBinSearch(%f, %f) error(%v)\n", number, threshold, err)
 	} else {
 		fmt.Printf("sqrtByBinSearch(%f, %f) ret(%f)\n", number, threshold, ret)
+	}
+	ret, err = newtonIterationSqrt(number, threshold)
+	if err != nil {
+		fmt.Printf("newtonIterationSqrt(%f, %f) error(%v)\n", number, threshold, err)
+	} else {
+		fmt.Printf("newtonIterationSqrt(%f, %f) ret(%f)\n", number, threshold, ret)
+	}
+
+
+	number = 16
+	ret, err = sqrtByBinSearch(number, threshold)
+	if err != nil {
+		fmt.Printf("sqrtByBinSearch(%f, %f) error(%v)\n", number, threshold, err)
+	} else {
+		fmt.Printf("sqrtByBinSearch(%f, %f) ret(%f)\n", number, threshold, ret)
+	}
+	ret, err = newtonIterationSqrt(number, threshold)
+	if err != nil {
+		fmt.Printf("newtonIterationSqrt(%f, %f) error(%v)\n", number, threshold, err)
+	} else {
+		fmt.Printf("newtonIterationSqrt(%f, %f) ret(%f)\n", number, threshold, ret)
 	}
 }
 
@@ -103,12 +132,13 @@ func sqrtByBinSearch(num, threshold float32) (float32, error) {
 		low = num
 		high = 1.0
 	}
+	count := 1
 
 	mid := (low + high) / 2.0
 	for {
 		// 与原数据误差控制在threshold以内
 		dval := (mid * mid) - num
-		if dval > -1*threshold && dval < threshold {
+		if dval >= -1*threshold && dval <= threshold {
 			break
 		}
 
@@ -118,6 +148,34 @@ func sqrtByBinSearch(num, threshold float32) (float32, error) {
 			low = mid
 		}
 		mid = (low + high) / 2.0
+		count++
 	}
+	fmt.Println("sqrtByBinSearch times:", count)
 	return mid, nil
+}
+
+// 牛顿迭代法
+// 求数a的平方根，相当于求x的平方 - a = 0的解，根据牛顿迭代法并化简后
+// 递推公式为：x(n+1) = x(n)/2 + a/2/x(n)
+func newtonIterationSqrt(num, threshold float32) (float32, error) {
+	if num < 0 {
+		return 0.0, fmt.Errorf("invalid num:%v", num)
+	}
+	// 取第一个迭代值
+	iterNum := num / 2
+	count := 1
+
+	for {
+		dval := iterNum * iterNum - num
+		// 与原数据之差已达到规定精度
+		if dval >= -1*threshold && dval <= threshold {
+			break
+		}
+		// 根据牛顿迭代法推导
+		iterNum = (iterNum + (num / iterNum)) / 2
+		count++
+	}
+
+	fmt.Println("newtonIterationSqrt times:", count)
+	return iterNum, nil
 }
