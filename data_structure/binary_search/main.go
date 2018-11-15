@@ -84,6 +84,29 @@ func main() {
 	} else {
 		fmt.Printf("newtonIterationSqrt(%f, %f) ret(%f)\n", number, threshold, ret)
 	}
+
+	fmt.Println("========================================")
+	list = []int{1,2,3,4,5,6,8,8,8,11,18}
+	x = 8
+	fmt.Printf("binSearchFirstEqual(list, %d) index:%d\n", x, binSearchFirstEqual(list, x))
+
+	list = []int{8}
+	fmt.Printf("binSearchFirstEqual(list, %d) index:%d\n", x, binSearchFirstEqual(list, x))
+
+	list = []int{1,2,3,4,5,6,8,8,8}
+	fmt.Printf("binSearchLastEqual(list, %d) index:%d\n", x, binSearchLastEqual(list, x))
+
+	list = []int{8}
+	fmt.Printf("binSearchLastEqual(list, %d) index:%d\n", x, binSearchLastEqual(list, x))
+
+	fmt.Println("=========================================")
+	list = []int{1,2,3,4,5,6,8,8,8,11,18}
+	x = 8
+	fmt.Printf("binSearchFirstGE(list, %d) index:%d\n", x, binSearchFirstGE(list, x))
+
+	list = []int{7}
+	x = 8
+	fmt.Printf("binSearchFirstGE(%v, %d) index:%d\n", list, x, binSearchFirstGE(list, x))
 }
 
 func binSearch(list []int, x int) int {
@@ -178,4 +201,73 @@ func newtonIterationSqrt(num, threshold float32) (float32, error) {
 
 	fmt.Println("newtonIterationSqrt times:", count)
 	return iterNum, nil
+}
+
+// 二分法变体-1
+// 查找第一个等于给定值的元素索引
+func binSearchFirstEqual(list []int, x int) int {
+	size := len(list)
+	low := 0
+	high := size - 1
+	for low <= high {
+		mid := low + ((high - low) >> 1)
+		if list[mid] > x {
+			high = mid - 1
+		} else if list[mid] < x {
+			low = mid + 1
+		} else {
+			// 如果相等 mid=0（只有一个元素）或 左边的元素不等，则是第一个等于的元素
+			if mid == 0 || (mid < size && list[mid-1] != x) {
+				return mid
+			} else {
+				high = mid - 1
+			}
+		}
+	}
+	return -1
+}
+
+// 二分法变体-2
+// 查找最后一个等于给定值的元素索引
+func binSearchLastEqual(list []int, x int) int {
+	size := len(list)
+	low := 0
+	high := size - 1
+	for low <= high {
+		mid := low + ((high - low) >> 1)
+		if list[mid] > x {
+			high = mid - 1
+		} else if list[mid] < x {
+			low = mid + 1
+		} else {
+			if mid == size - 1 || list[mid+1] != x {
+				return mid
+			} else {
+				low = mid+1
+			}
+		}
+	}
+	return -1
+}
+
+// 二分法变体-3
+// 查找第一个大于或等于给定值的元素索引
+func binSearchFirstGE(list []int, x int) int {
+	size := len(list)
+	low := 0
+	high := size - 1
+	for low <= high {
+		mid := low + (high - low) >> 1
+		fmt.Printf("low:%d mid:%d high:%d\n", low, mid, high)
+		if list[mid] < x {
+			low = mid + 1
+		} else {
+			if (mid == 0) || list[mid-1] < x {
+				return mid
+			} else {
+				high = mid - 1
+			}
+		}
+	}
+	return -1
 }
