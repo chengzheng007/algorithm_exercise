@@ -107,6 +107,16 @@ func main() {
 	list = []int{7}
 	x = 8
 	fmt.Printf("binSearchFirstGE(%v, %d) index:%d\n", list, x, binSearchFirstGE(list, x))
+
+	fmt.Println()
+	list = []int{1,2,3,4,7,9,13}
+	x = 8
+	fmt.Printf("binSearchLastGE(%v, %d) index:%d\n", list, x, binSearchLastGE(list, x))
+
+	list = []int{8}
+	x = 8
+	fmt.Printf("binSearchLastGE(%v, %d) index:%d\n", list, x, binSearchLastGE(list, x))
+	
 }
 
 func binSearch(list []int, x int) int {
@@ -253,19 +263,38 @@ func binSearchLastEqual(list []int, x int) int {
 // 二分法变体-3
 // 查找第一个大于或等于给定值的元素索引
 func binSearchFirstGE(list []int, x int) int {
+	low := 0
+	high := len(list) - 1
+	for low <= high {
+		mid := low + (high - low) >> 1
+		if list[mid] < x {
+			low = mid + 1
+		} else {
+			if mid == 0 || list[mid-1] < x {
+				return mid
+			} else {
+				high = mid - 1
+			}
+		}
+	}
+	return -1
+}
+
+// 二分法变体-4
+// 查找最后一个小于或等于给定值的元素索引
+func binSearchLastGE(list []int, x int) int {
 	size := len(list)
 	low := 0
 	high := size - 1
 	for low <= high {
 		mid := low + (high - low) >> 1
-		fmt.Printf("low:%d mid:%d high:%d\n", low, mid, high)
-		if list[mid] < x {
-			low = mid + 1
+		if list[mid] > x {
+			high = mid - 1
 		} else {
-			if (mid == 0) || list[mid-1] < x {
+			if mid == size - 1 || list[mid+1] > x {
 				return mid
 			} else {
-				high = mid - 1
+				low = mid + 1
 			}
 		}
 	}
