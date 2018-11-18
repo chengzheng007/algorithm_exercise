@@ -116,7 +116,12 @@ func main() {
 	list = []int{8}
 	x = 8
 	fmt.Printf("binSearchLastGE(%v, %d) index:%d\n", list, x, binSearchLastGE(list, x))
-	
+
+	fmt.Println()
+	//list = []int{4,5,1,2,3}
+	list = []int{6,7,1,2,3,4,5}
+	x = 1
+	fmt.Printf("binsSearchRotateArray(%v, %d) index:%d\n", list, x, binsSearchRotateArray(list, x))
 }
 
 func binSearch(list []int, x int) int {
@@ -296,6 +301,34 @@ func binSearchLastGE(list []int, x int) int {
 			} else {
 				low = mid + 1
 			}
+		}
+	}
+	return -1
+}
+
+func binsSearchRotateArray(nums []int, target int) int {
+	low := 0
+	high := len(nums) - 1
+	for low <= high {
+		mid := low + (high - low) >> 1
+		fmt.Printf("low:%d mid:%d high:%d\n", low, mid, high)
+		if nums[low] == target {
+			return low
+		}
+		if nums[high] == target {
+			return high
+		}
+		if nums[mid] == target {
+			return mid
+		}
+		if target > nums[mid] && target > nums[high] && nums[mid] < nums[low] {
+			high = mid - 1
+		} else if target < nums[mid] && target < nums[low] && nums[mid] < nums[low] {
+			high = mid - 1
+		} else if target < nums[mid] && target > nums[low] {
+			high = mid - 1
+		} else {
+			low = mid + 1
 		}
 	}
 	return -1

@@ -49,6 +49,7 @@ func main() {
 }
 
 // 冒泡
+// 时间复杂度：O(n^2)
 func bubbleSort(list []int) {
 	size := len(list)
 	if size <= 1 {
@@ -70,6 +71,7 @@ func bubbleSort(list []int) {
 }
 
 // 直接插入法
+// 时间复杂度：O(n^2)
 func insertSort(list []int) {
 	size := len(list)
 	if size <= 1 {
@@ -91,6 +93,7 @@ func insertSort(list []int) {
 }
 
 // 二分插入排序
+// 时间复杂度：O(nlogn)
 func binInsertSort(list []int) {
 	size := len(list)
 	if size <= 1 {
@@ -117,6 +120,7 @@ func binInsertSort(list []int) {
 }
 
 // 选择法
+// 时间复杂度：O(n^2)
 func selectSort(list []int) {
 	size := len(list)
 	if size <= 1 {
@@ -157,6 +161,7 @@ func shellSort(list []int) {
 
 // 快排 - 分治思想
 // l:0 r: length of list - 1
+// 时间复杂度：O(nlogn)，最慢退化为O(n^2)
 func quickSort(list []int, l, r int) {
 	if l >= r {
 		return
@@ -187,6 +192,7 @@ func partion(list []int, l, r int) int {
 }
 
 // 归并排序
+// 时间复杂度：O(nlogn)
 func mergeSort(list []int, l, r int) {
 	if l >= r {
 		return
@@ -233,6 +239,7 @@ func merge(list []int, l, mid, r int) {
 
 // 计数排序 - 【这里数组中只允许非负数】
 // 适用于数据大小范围足够小的情况
+// 时间复杂度：O(n)
 func countingSort(list []int) error {
 	size := len(list)
 	if size <= 1 {
@@ -273,6 +280,7 @@ func countingSort(list []int) error {
 }
 
 // 基数排序 - 【以最大数字为两位数为例】
+// 时间复杂度 O(dn)，d表示维度
 func radixSort(list []int) error {
 	size := len(list)
 	if size <= 1 {
