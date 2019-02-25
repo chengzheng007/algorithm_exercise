@@ -12,7 +12,6 @@ type arrayQueue struct {
 	list []int
 }
 
-
 func main() {
 	q := NewArrayQueue(8)
 

@@ -120,7 +120,7 @@ func (psl *SkipList) Insert(x int) {
 
 	// 寻找每一层插入位置的前驱节点，记录在update中
 	p := psl.Head
-	for i := level-1; i >= 0; i--  {
+	for i := level-1; i >= 0; i-- {
 		for p.Next[i] != nil && p.Next[i].Val < x {
 			p = p.Next[i]
 		}
@@ -207,6 +207,7 @@ func (psl *SkipList) Delete(x int) bool {
 		return false
 	}
 
+	// 删除的是最顶层的节点
 	if p.Next[0].MaxLevel == psl.MaxLevel {
 		psl.MaxLevelNodes--
 	}
@@ -217,18 +218,18 @@ func (psl *SkipList) Delete(x int) bool {
 		}
 	}
 
-	// 如果删除导致原本最上一层节点为0，下一层将变为最大层
+	// 如果删除导致原本最上一层节点为0，下一层将变更为最大层
 	if psl.MaxLevelNodes == 0 {
-		// MaxLevel-1层为
+		// MaxLevel-1层为之前的最顶层
 		for i := psl.MaxLevel-2; i >= 0; i-- {
 			p := psl.Head
 			for p.Next[i] != nil {
 				psl.MaxLevelNodes++
 				p = p.Next[i]
 			}
-
-			// 已将某一层更新为最上层
+			
 			psl.MaxLevel = i + 1
+			// 已将某一层更新为最上层
 			if psl.MaxLevelNodes > 0 {
 				break
 			}
