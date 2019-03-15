@@ -58,6 +58,7 @@ func (h *Heap) Push(num int) {
 
 	h.count++
 	// 第一个位置空出，根节点存储在数组1开始的地方
+	// 每次插入的节点放在最后
 	h.list[h.count] = num
 	// 堆调整，从下往上交换建堆
 	pos := h.count
