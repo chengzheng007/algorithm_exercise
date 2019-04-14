@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-// 字典树/字符树/Trie树
+// Trie树/字典树/字符树
 
 const (
 	Char_Size = 26
@@ -11,14 +11,17 @@ const (
 
 
 type Trie struct {
-	Root *TrieNode // root node not store 
+	Root *TrieNode // root node doesn't store any significant char
 }
 
 // only allow[a-z] 26 chars
 type TrieNode struct {
 	C byte
-	IsEndingChar bool			// true:the char is ending for a word
-	List [Char_Size]*TrieNode 	// store its child nodes
+	// true: the char is ending for a word, false indicate this is a middle char for a word
+	IsEndingChar bool
+	// store its child nodes, for example, char a's ascii is 97, then it store at
+	// List[97-97], index is 0, and b will store in List[98-97], index is 1
+	List [Char_Size]*TrieNode
 }
 
 func NewTrie() *Trie {
@@ -57,7 +60,7 @@ func (t *Trie) Match(pattern string) bool {
 		if index < 0 || index >= Char_Size {
 			return false
 		}
-		// 不为空一定是对应的字符
+		// when not null, it must be a corresponding char
 		if p.List[index] == nil {
 			return false
 		}
