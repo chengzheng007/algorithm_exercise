@@ -11,14 +11,14 @@ const (
 
 
 type Trie struct {
-	Root *TrieNode // 根节点不存储字符
+	Root *TrieNode // root node not store 
 }
 
-// 只允许[a-z]26个字符
+// only allow[a-z] 26 chars
 type TrieNode struct {
 	C byte
-	IsEndingChar bool			// 是否是结束节点
-	List [Char_Size]*TrieNode 	// 列表下标存储对应的英文字符
+	IsEndingChar bool			// true:the char is ending for a word
+	List [Char_Size]*TrieNode 	// store its child nodes
 }
 
 func NewTrie() *Trie {
@@ -46,7 +46,7 @@ func (t *Trie) Insert(word string) error {
 	return nil
 }
 
-// 匹配一个单词
+// match a word
 func (t *Trie) Match(pattern string) bool {
 	p := t.Root
 	if p == nil {
@@ -103,12 +103,12 @@ func getSuffix(p *TrieNode, str string) (list []string) {
 		clist := getSuffix(p.List[i], str+string(p.List[i].C))
 		// when char is the ended char as a word, put it into a slice, and merge clist which was its child nodes' suffix
 		if p.List[i].IsEndingChar {
-			suffix := str+string(p.List[i].C)
+			suffix := str + string(p.List[i].C)
 			list = append(list, suffix)
-			list = append(list, clist...)
-			//fmt.Printf("suffix:%s, suffix_list:%v clist:%v\n", suffix, list, clist)
-		} else if len(clist) > 0 {
-			// when passing by non-ended char, and its child nodes' suffix not empty, merge them to slice
+		}
+		// when passing by non-ended char or an ending char, and its child nodes' suffix not empty
+		// merge them to the slice
+		if len(clist) > 0 {
 			list = append(list, clist...)
 		}
 	}
