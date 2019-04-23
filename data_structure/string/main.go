@@ -65,5 +65,11 @@ func main() {
 	prefix = "s"
 	list = trie.MatchByPrefix(prefix)
 	fmt.Printf("prefix:%s, MatchByPrefix:%v\n", prefix, list)
-		
+
+	fmt.Println("ac automation test:")
+	acAuto := NewAcAutomation()
+	words = []string{"abcd", "bcd", "c"}
+	acAuto.BuildTrieTree(words)
+	acAuto.BuildFailPointer()
+	acAuto.MatchFind("abcd")
 }

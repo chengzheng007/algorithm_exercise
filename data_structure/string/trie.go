@@ -5,7 +5,7 @@ import "fmt"
 // Trie树/字典树/字符树
 
 const (
-	Char_Size = 26
+	List_Size = 26
 	Char_Start byte = 'a'
 )
 
@@ -21,7 +21,7 @@ type TrieNode struct {
 	IsEndingChar bool
 	// store its child nodes, for example, char a's ascii is 97, then it store at
 	// List[97-97], index is 0, and b will store in List[98-97], index is 1
-	List [Char_Size]*TrieNode
+	List [List_Size]*TrieNode
 }
 
 func NewTrie() *Trie {
@@ -37,8 +37,8 @@ func (t *Trie) Insert(word string) error {
 	}
 	for i := 0; i < len(word); i++ {
 		index := int(word[i] - Char_Start)
-		if index < 0 || index >= Char_Size {
-			return fmt.Errorf("not allowed char exist, must bettewn [a,z]")
+		if index < 0 || index >= List_Size {
+			return fmt.Errorf("not allowed char exist, must between [a,z]")
 		}
 		if p.List[index] == nil {
 			p.List[index] = &TrieNode{C:word[i]}
@@ -57,7 +57,7 @@ func (t *Trie) Match(pattern string) bool {
 	}
 	for i := 0; i < len(pattern); i++ {
 		index := int(pattern[i] - Char_Start)
-		if index < 0 || index >= Char_Size {
+		if index < 0 || index >= List_Size {
 			return false
 		}
 		// when not null, it must be a corresponding char
@@ -66,7 +66,7 @@ func (t *Trie) Match(pattern string) bool {
 		}
 		p = p.List[index]
 	}
-	// if p.IsEndingChar is false, that is, pattern is only a prefix
+	// if p.IsEndingChar is false, that is, pattern is only a prefix that
 	// can't match completely
 	return p.IsEndingChar
 }
@@ -79,7 +79,7 @@ func (t *Trie) MatchByPrefix(prefix string) (words []string) {
 	index := -1
 	for i := 0; i < len(prefix); i++ {
 		index = int(prefix[i] - Char_Start)
-		if index < 0 || index >= Char_Size {
+		if index < 0 || index >= List_Size {
 			words = []string{}
 			return
 		}
@@ -98,7 +98,7 @@ func getSuffix(p *TrieNode, str string) (list []string) {
 	if p == nil {
 		return
 	}
-	for i := 0; i < Char_Size; i++ {
+	for i := 0; i < List_Size; i++ {
 		if p.List[i] == nil {
 			continue
 		}
