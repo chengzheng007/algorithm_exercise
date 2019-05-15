@@ -21,7 +21,7 @@ func mergeTwoSeqLinkedList(h1 *Node, h2 *Node) *Node {
 		}
 		r = r.Next
 	}
-	// only one linked list has reaining element
+	// only one linked list has remaining element
 	if p != nil {
 		r.Next = p
 	}
