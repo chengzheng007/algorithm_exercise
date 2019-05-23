@@ -3,49 +3,48 @@ package main
 import "fmt"
 
 func main() {
-	list := []int{5,4,3,3,2,1,9,0}
+	list := []int{5, 4, 3, 3, 2, 1, 9, 0}
 	bubbleSort(list)
 	fmt.Println("bubbleSort:", list)
 
-	list = []int{2,6,1,6,-5}
+	list = []int{2, 6, 1, 6, -5}
 	insertSort(list)
 	fmt.Println("insertSort:", list)
 
-	list = []int{5,2,6,1,6,-5}
+	list = []int{5, 2, 6, 1, 6, -5}
 	binInsertSort(list)
 	fmt.Println("binInsertSort:", list)
 
-	list = []int{2,6,1,6,-5}
+	list = []int{2, 6, 1, 6, -5}
 	selectSort(list)
 	fmt.Println("selectSort:", list)
 
-	list = []int{2,35,1429,64,5,10,12,30,-5}
+	list = []int{2, 35, 1429, 64, 5, 10, 12, 30, -5}
 	shellSort(list)
 	fmt.Println("shellSort:", list)
 
-	list = []int{2,-5,10,3,10,12}
+	list = []int{2, -5, 10, 3, 10, 12}
 	quickSort(list, 0, len(list)-1)
 	fmt.Println("quickSort:", list)
 
-	list = []int{2,-5,6,1,3}
+	list = []int{2, -5, 6, 1, 3}
 	mergeSort(list, 0, len(list)-1)
 	fmt.Println("mergeSort:", list)
 
-	list = []int{2,5,3,0,2,3,0,3,9,1}
+	list = []int{2, 5, 3, 0, 2, 3, 0, 3, 9, 1}
 	if err := countingSort(list); err != nil {
 		fmt.Printf("countingSort() error(%v)\n", err)
 	} else {
 		fmt.Println("countingSort:", list)
 	}
 
-	list = []int{36,5,16,98,95,47,32,36,48,10}
+	list = []int{36, 5, 16, 98, 95, 47, 32, 36, 48, 10}
 	if err := radixSort(list); err != nil {
 		fmt.Printf("radixSort() error(%v)\n", err)
 	} else {
 		fmt.Println("radixSort:", list)
 	}
 
-	
 }
 
 // 冒泡
@@ -55,9 +54,9 @@ func bubbleSort(list []int) {
 	if size <= 1 {
 		return
 	}
-	for i := 0; i < size - 1; i++ { // 最后一趟只剩一个元素不用交换
+	for i := 0; i < size-1; i++ { // 最后一趟只剩一个元素不用交换
 		flag := false
-		for j := 0; j < size - i - 1; j++ {
+		for j := 0; j < size-i-1; j++ {
 			if list[j] > list[j+1] {
 				list[j], list[j+1] = list[j+1], list[j]
 				flag = true
@@ -80,7 +79,7 @@ func insertSort(list []int) {
 	for i := 1; i < size; i++ {
 		temp := list[i]
 		// 寻找插入位置
-		j := i-1
+		j := i - 1
 		for ; j >= 0; j-- {
 			if list[j] > temp {
 				list[j+1] = list[j]
@@ -104,7 +103,7 @@ func binInsertSort(list []int) {
 		l := 0
 		r := i - 1
 		for l <= r {
-			mid := (l+r)/2
+			mid := (l + r) / 2
 			if temp < list[mid] {
 				r = mid - 1
 			} else {
@@ -112,7 +111,7 @@ func binInsertSort(list []int) {
 			}
 		}
 		// l为最终数据插入位置, l及右边数据右移
-		for j := i-1; j >= l; j-- {
+		for j := i - 1; j >= l; j-- {
 			list[j+1] = list[j]
 		}
 		list[l] = temp
@@ -128,7 +127,7 @@ func selectSort(list []int) {
 	}
 	for i := 0; i < size; i++ {
 		minIndex := i
-		for j := i+1; j < size; j++ {
+		for j := i + 1; j < size; j++ {
 			if list[j] < list[minIndex] {
 				minIndex = j
 			}
@@ -143,7 +142,7 @@ func shellSort(list []int) {
 	if size <= 1 {
 		return
 	}
-	for N := size/2; N > 0; N-- {
+	for N := size / 2; N > 0; N-- {
 		for i := N; i < size; i++ {
 			temp := list[i]
 			j := i - N
@@ -169,7 +168,7 @@ func quickSort(list []int, l, r int) {
 
 	// 选取一个分区点，左边比它小，右边比它大，返回这个分区点最终下标
 	// 排序实际在分区函数中完成
-	pIndex := partion(list, l, r)   
+	pIndex := partion(list, l, r)
 	// 递归处理分区点左边部分
 	quickSort(list, l, pIndex-1)
 	// 递归处理分区点右边部分
@@ -198,8 +197,8 @@ func mergeSort(list []int, l, r int) {
 		return
 	}
 
-	mid := (l+r)/2
-	
+	mid := (l + r) / 2
+
 	// 分治递归
 	mergeSort(list, l, mid)
 	mergeSort(list, mid+1, r)
@@ -212,7 +211,7 @@ func merge(list []int, l, mid, r int) {
 	tmpArr := make([]int, r-l+1)
 
 	i := l
-	j := mid+1
+	j := mid + 1
 	k := 0
 	// slice需要访问到最左或最右的元素
 	for ; i <= mid && j <= r; k++ {
@@ -224,7 +223,7 @@ func merge(list []int, l, mid, r int) {
 			j++
 		}
 	}
-	
+
 	for ; i <= mid; i++ {
 		tmpArr[k] = list[i]
 		k++
@@ -270,7 +269,7 @@ func countingSort(list []int) error {
 
 	// 反向遍历，将排序数据放入排序列表
 	rankList := make([]int, size)
-	for i := size-1; i >= 0; i-- {
+	for i := size - 1; i >= 0; i-- {
 		rankList[c[list[i]]-1] = list[i]
 		c[list[i]]--
 	}
@@ -291,8 +290,8 @@ func radixSort(list []int) error {
 	}
 
 	// 分配10个桶，0...9，每个桶可动态扩容
-	bucket := make([][]int, 10)  // 个位数
-		
+	bucket := make([][]int, 10) // 个位数
+
 	// 第一次按低位遍历分配
 	for _, num := range list {
 		if num < 0 || num >= 100 {
