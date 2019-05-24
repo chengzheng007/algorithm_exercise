@@ -53,9 +53,7 @@ func (lch *lruCache) Set(k string, v int) {
 	lch.count++
 
 	if lch.count > lch.capacity {
-		// fmt.Printf("lch.count:%v > lch.capacity\n", lch.count)
 		tail := lch.popTail()
-		// fmt.Printf("tail:%+v tail.prev:%+v tail.next:%+v\n", tail, tail.prev, tail.next)
 		delete(lch.hashMap, tail.Key)
 		lch.count--
 	}
