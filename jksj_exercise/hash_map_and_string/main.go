@@ -39,4 +39,32 @@ func main() {
 	hashmap.Del(15)
 	fmt.Println("after del 15:")
 	hashmap.Print()
+
+	// lru cache
+	fmt.Println("lru cache test:")
+	lru, _ := NewLruCache(3)
+	lru.Print()
+	lru.Set("key1", 1)
+	lru.Set("key2", 2)
+	lru.Print()
+
+	lru.Set("key3", 3)
+	lru.Print()
+
+	lru.Set("key4", 4)
+	lru.Print()
+
+	fmt.Printf("get key1:%v\n", lru.Get("key1"))
+	fmt.Printf("get key2:%v\n", lru.Get("key2"))
+	fmt.Println("after access key2:")
+	lru.Print()
+
+	fmt.Println("after set key4:")
+	lru.Set("key4", 4)
+	lru.Print()
+
+	fmt.Println("after set key3:")
+	lru.Set("key3", 333)
+	lru.Print()
+
 }

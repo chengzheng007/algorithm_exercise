@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 )
 
 var (
@@ -12,12 +14,13 @@ var (
 type lruCache struct {
 	capacity int
 	count    int
-	hashMap map[string]*dblistNode
-	root  *dblistNode
+	hashMap  map[string]*dblistNode
+	root     *dblistNode
 }
 
 type dblistNode struct {
-	Val int
+	Key  string
+	Val  int
 	prev *dblistNode
 	next *dblistNode
 }
@@ -27,42 +30,95 @@ func NewLruCache(capacity int) (*lruCache, error) {
 		return nil, ErrCacheCap
 	}
 	lch := &lruCache{
-		capacity:    capacity,
-		hashMap: make(map[string]*dblistNode, capacity),
-		root: &dblistNode{},
+		capacity: capacity,
+		hashMap:  make(map[string]*dblistNode, capacity),
+		root:     &dblistNode{},
 	}
 	lch.root.next = lch.root
 	lch.root.prev = lch.root
 	return lch, nil
 }
 
-func (lch *lruCache) Put(k string, v int) {
-	// 已存在，移动到最前面
+func (lch *lruCache) Set(k string, v int) {
 	if node, ok := lch.hashMap[k]; ok && node != nil {
-
-
-		node.prev.next = node.next
-		node.next.prev = node.prev
+		lch.removeNode(node)
+		node.Val = v
+		lch.addNode(node)
 		return
 	}
-	
+
+	node := &dblistNode{Key: k, Val: v}
+	lch.addNode(node)
+	lch.hashMap[k] = node
+	lch.count++
+
+	if lch.count > lch.capacity {
+		// fmt.Printf("lch.count:%v > lch.capacity\n", lch.count)
+		tail := lch.popTail()
+		// fmt.Printf("tail:%+v tail.prev:%+v tail.next:%+v\n", tail, tail.prev, tail.next)
+		delete(lch.hashMap, tail.Key)
+		lch.count--
+	}
 }
 
-// 将node节点添加到root节点后
+func (lch *lruCache) Get(k string) int {
+	node, ok := lch.hashMap[k]
+	if !ok {
+		return -1
+	}
+	lch.moveToHead(node)
+	return node.Val
+}
+
+// addNode put node after root
 func (lch *lruCache) addNode(node *dblistNode) {
 	node.next = lch.root.next
 	node.prev = lch.root
+	node.next.prev = node
 	lch.root.next = node
-	if lch.root.prev == lch.root {
-		lch.root.prev = node
-	}
-	lch.count++
 }
 
-func (lch *lruCache) remove(node *dblistNode) {
-	node.prev.next = node.next
+// remove do remove node from double list
+func (lch *lruCache) removeNode(node *dblistNode) {
+	if node == nil {
+		return
+	}
 	node.next.prev = node.prev
+	node.prev.next = node.next
 	node.prev = nil
 	node.next = nil
-	lch.count--
+}
+
+// moveToHead do move node to head of list
+func (lch *lruCache) moveToHead(node *dblistNode) {
+	lch.removeNode(node)
+	lch.addNode(node)
+}
+
+// popTail do pop tail node of list
+func (lch *lruCache) popTail() *dblistNode {
+	node := lch.root.prev
+	// no node in list
+	if node == lch.root {
+		return nil
+	}
+	lch.removeNode(node)
+	return node
+}
+
+func (lch lruCache) Print() {
+	type tempStruct struct {
+		K string `json:"key"`
+		V int    `json:"val"`
+	}
+	list := make([]*tempStruct, lch.count)
+	i := 0
+	p := lch.root.next
+	for p != lch.root && p != nil {
+		list[i] = &tempStruct{K: p.Key, V: p.Val}
+		p = p.next
+		i++
+	}
+	jstr, _ := json.Marshal(list)
+	fmt.Printf("elems num:%d, val:%s\n", lch.count, jstr)
 }
