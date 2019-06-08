@@ -67,4 +67,9 @@ func main() {
 	lru.Set("key3", 333)
 	lru.Print()
 
+
+	fmt.Println("bf test:")
+	idx := bf("cbcdefg", "cde")
+	fmt.Printf("bf idx:%d\n", idx)
+
 }
