@@ -92,6 +92,7 @@ func postOrderTraversalRec(root *Node, dep int) {
 }
 
 // 遍历：非递归
+// 递归的地方，就是入栈的地方。由于先进后出，所以重点要看哪个先入栈
 func preOrderTraversal(root *Node) {
 	if root == nil {
 		return
