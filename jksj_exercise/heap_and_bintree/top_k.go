@@ -17,10 +17,11 @@ func topK(list []int, k int) []int {
 		i++
 	}
 	buildSmallTopHeap(heapList, k)
-	
+
+	// 处理剩余数据
 	for i < size {
+		// 如果比堆顶元素大，替换为堆顶元素，并从堆顶开始堆化
 		if heapList[1] < list[i] {
-			// 替换为堆顶元素，从堆顶开始堆化
 			heapList[1] = list[i]
 			smallTopHeapify(heapList, k, 1)
 		}
