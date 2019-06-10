@@ -5,6 +5,7 @@ package main
 func buildHeap(list []int, n int) {
 	// 只有前一半有叶子节点，只需调整前一半
 	// 倒序遍历前一半节点，从上往下堆化
+	// 需要调整前一半每一个节点，而不是仅仅从堆顶开始就行，原因是每一次只调整了一个节点
 	for i := n/2; i >= 1; i-- {
 		heapifyTopToBottom(list, n, i)
 	}
