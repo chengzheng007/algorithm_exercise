@@ -49,7 +49,7 @@ func (g UndirectGraph) PrintEdge() {
 	fmt.Printf("adj list:\n%s\n", str)
 }
 
-// breadth first search，广度优先搜索，寻找两点直径路径
+// breadth first search，广度优先搜索，寻找两点之间路径（bfs的结果就是最短路径）
 func (g *UndirectGraph) BFS(s, t int) {
 	if s >= g.vertexNum || t >= g.vertexNum {
 		fmt.Printf("one of the point(%v, %v) not in graph.\n", s, t)
