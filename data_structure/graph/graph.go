@@ -102,3 +102,49 @@ func printPath(path []int, s, t int) {
 	fmt.Printf("->%d ", t)
 }
 
+// depth first search，深度优先搜索
+// 深度优先搜锁利用回溯的思想，不通就返回上一层，算法决定了找到的不是最短路径
+func (g *UndirectGraph) DFS(s, t int) {
+	if s >= g.vertexNum || t >= g.vertexNum {
+		fmt.Printf("one of the point(%v, %v) not in graph.\n", s, t)
+		return
+	}
+	if s == t {
+		fmt.Println("start point equal to end point.")
+		return
+	}
+	// found == true表示找到一条由s通往t的路
+	found := false
+	visited := make([]bool, g.vertexNum)
+	prev := make([]int, g.vertexNum)
+	for i := range prev {
+		prev[i] = -1
+	}
+	g.recursiveDfs(&found, s, t, prev, visited)
+	if !found {
+		fmt.Println("no path found.")
+		return
+	}
+	fmt.Printf("find the path %d to %d:", s, t)
+	printPath(prev, s, t)
+	fmt.Println()
+}
+
+func (g *UndirectGraph) recursiveDfs(found *bool, w, t int, prev []int, visited []bool) {
+	if *found {
+		return
+	}
+	visited[w] = true
+	if w == t {
+		*found = true
+		return
+	}
+	for _, q := range g.adj[w] {
+		if visited[q] {
+			continue
+		}
+		prev[q] = w
+		g.recursiveDfs(found, q, t, prev, visited)
+	}
+}
+

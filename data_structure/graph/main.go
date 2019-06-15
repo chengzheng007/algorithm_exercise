@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 func main() {
 	graph := newUndirectGraph(8)
 	graph.AddEdge(0, 1)
@@ -15,7 +17,11 @@ func main() {
 
 	graph.PrintEdge()
 
+	fmt.Println("bfs test:")
 	graph.BFS(0, 6)
 	graph.BFS(2, 6)
+	fmt.Println("\ndfs test:")
+	graph.DFS(0, 6)
+	graph.DFS(2, 6)
 	
 }
