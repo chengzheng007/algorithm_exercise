@@ -66,7 +66,7 @@ func (g *UndirectGraph) BFS(s, t int) {
 	}
 	// 存储节点是否被访问过
 	visited := make([]bool, g.vertexNum)
-	// 广度搜索依赖的队列
+	// 广度搜索依赖的队列，借助队列，逐层扫描
 	queue := list.New()
 
 	visited[s] = true
