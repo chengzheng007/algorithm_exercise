@@ -71,3 +71,37 @@ func (g *DirectedGraph) TopoSortByKahn() {
 	fmt.Println()
 }
 
+// dfs实现拓扑排序
+func (g *DirectedGraph) TopoSortByDFS() {
+	// 构建逆邻接表
+	inverseAdj := make([][]int, g.vertexNum)
+	for i, adjList := range g.adj {
+		for _, v := range adjList {
+			//i->v
+			inverseAdj[v] = append(inverseAdj[v], i)  // v->i
+		}
+	}
+	// 逆邻接表里，都是指向当前节点的顶点
+	//fmt.Printf("inverse adj:%v\n", inverseAdj)
+	visited := make([]bool, g.vertexNum)
+	for i := 0; i < g.vertexNum; i++ {
+		if visited[i] {
+			continue
+		}
+		visited[i] = true
+		g.topoDfs(i, inverseAdj, visited)
+	}
+	fmt.Println()
+}
+
+func (g *DirectedGraph) topoDfs(vertex int, inverseAdj [][]int, visited []bool) {
+	for _, vid := range inverseAdj[vertex] {
+		if visited[vid] {
+			continue
+		}
+		visited[vid] = true
+		g.topoDfs(vid, inverseAdj, visited)
+	}
+	// 先打印指向自己的顶点（自己依赖的顶点），最后再打印自己
+	fmt.Printf("->%d ", vertex)
+}

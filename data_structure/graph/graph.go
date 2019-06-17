@@ -82,7 +82,7 @@ func (g *UndirectGraph) BFS(s, t int) {
 			}
 			prev[q] = w
 			if q == t {
-				fmt.Printf("find the path %d to %d:", s, t)
+				fmt.Printf("find the path %d to %d: ", s, t)
 				printPath(prev, s, t)
 				fmt.Println()
 				return
@@ -125,7 +125,7 @@ func (g *UndirectGraph) DFS(s, t int) {
 		fmt.Println("no path found.")
 		return
 	}
-	fmt.Printf("find the path %d to %d:", s, t)
+	fmt.Printf("find the path %d to %d: ", s, t)
 	printPath(prev, s, t)
 	fmt.Println()
 }
