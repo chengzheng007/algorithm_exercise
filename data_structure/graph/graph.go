@@ -3,7 +3,7 @@ package main
 import (
 	"container/list"
 	"fmt"
-	"github.com/gin-gonic/gin/json"
+	"encoding/json"
 	"strconv"
 )
 
