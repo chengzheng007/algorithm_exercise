@@ -12,4 +12,26 @@ func main() {
 	list = []int{5,3,6,1,2,4,9}
 	count = brouteReverseOrderCountint(list)
 	fmt.Printf("validate count:%d\n", count)
+
+	fmt.Printf("\nback tracking test:\n")
+	fmt.Printf("n queen:\n")
+	n := 4
+	list1 := make([]int, n)
+	nQueen(list1, n, 0)
+
+	weight := []int{2,2,4,6,3}
+	n = 5
+	maxW := 9
+	var inW int
+	packagesProblem(weight, n, 0, 0, maxW, &inW)
+	fmt.Printf("max load in package:%d\n", inW)
+
+	fmt.Println("\ndynamic programming test:")
+	maxW = 8
+	fmt.Printf("all weight:%v\n", weight)
+	inw := knapsack(weight, n, maxW)
+	fmt.Printf("knapsack max load in package:%d\n", inw)
+
+	inw = knapsack2(weight, n, maxW)
+	fmt.Printf("knapsack2 max load in package:%d\n", inw)
 }
