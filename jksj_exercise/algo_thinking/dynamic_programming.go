@@ -168,3 +168,77 @@ func dpMinDist(w [][]int, n int) int {
 	
 	return state[n-1][n-1]
 }
+
+/* 钱币找零 dp
+ * 分别有1元、3元、5元若干张纸币，找9元，最少可以是多少张
+ */
+func minCoins(money int) int {
+	if money == 1 || money == 3 || money == 5 {
+		return 1
+	}
+	
+	state := make([][]bool, money)
+	for i := range state {
+		state[i] = make([]bool, money+1)
+	}
+
+	// 初始化
+	state[0][0] = true
+	if money >= 1 {
+		state[0][1] = true
+	}
+	if money >= 3 {
+		state[0][3] = true
+	}
+	if money >= 5 {
+		state[0][5] = true
+	}
+	i := 1
+	num := 0
+
+	loop:
+	for ; i < money; i++ {
+		for j := 1; j <= money; j++ {
+			if state[i-1][j] {
+				if j+1 <= money {
+					state[i][j+1] = true
+				}
+				if j+3 <= money {
+					state[i][j+3] = true
+				}
+				if j+5 <= money {
+					state[i][j+5] = true
+				}
+				if state[i][money] {
+					num = i+1
+					break loop
+				}
+			}
+		}
+	}
+
+	// 打印找了多少面额的钱
+	j := money
+	for p := i; p >= 1; p-- {
+		if j-1 >= 0 && state[p-1][j-1] {
+			fmt.Printf("select 1 yuan.\n")
+			j -= 1
+		} else if j-3 >= 0 && state[p-1][j-3] {
+			fmt.Printf("select 3 yuan.\n")
+			j -= 3
+		} else if j-5 >= 0 && state[p-1][j-5] {
+			fmt.Printf("select 5 yuan.\n")
+			j -= 5
+		}
+	}
+	if j > 0 {
+		fmt.Printf("select %d yuan.\n", j)
+	}
+	if num > 0 {
+		return num
+	}
+
+	fmt.Printf("all select 1 yuan.\n")
+	// 全部是1元找零
+	return money
+}

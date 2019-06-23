@@ -52,4 +52,9 @@ func main() {
 	fmt.Printf("backtracking minDist:%d\n", minDist)
 	fmt.Printf("dp minDist:%d\n", dpMinDist(w, n))
 
+
+	fmt.Printf("money find exchange test:\n")
+	money := 9
+	coins := minCoins(money)
+	fmt.Printf("at least coin num:%d\n", coins)
 }
