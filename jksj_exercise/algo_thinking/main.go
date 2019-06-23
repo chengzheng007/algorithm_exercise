@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 func main() {
 	fmt.Println("reverse order counting test:")
@@ -34,4 +37,19 @@ func main() {
 
 	inw = knapsack2(weight, n, maxW)
 	fmt.Printf("knapsack2 max load in package:%d\n", inw)
+
+
+	fmt.Println("\n\nnmin dist test:")
+	w := [][]int{
+		[]int{1,3,5,9},
+		[]int{2,1,3,4},
+		[]int{5,2,6,7},
+		[]int{6,8,4,3},
+	}
+	n = 4
+	minDist := math.MaxInt32
+	backTrackMinDist(w, n, 0, 0, 0, &minDist)
+	fmt.Printf("backtracking minDist:%d\n", minDist)
+	fmt.Printf("dp minDist:%d\n", dpMinDist(w, n))
+
 }

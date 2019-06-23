@@ -120,3 +120,51 @@ func knapsack3(weight, value []int, n, maxW int) int {
 	}
 	return maxValue
 }
+
+func backTrackMinDist(w [][]int, n, i, j, currDist int, minDist *int) {
+	currDist += w[i][j]
+	if i == n-1 && j == n-1 {
+		if currDist < *minDist {
+			*minDist = currDist
+			return
+		}
+	}
+	if i < n-1 {
+		backTrackMinDist(w, n, i+1, j, currDist, minDist)
+		// 如果以这种方式传递，最开始不 += w[i][j]，j=n-1时，最后一格（右下角）是没加上的
+		//backTrackMinDist(w, n, i+1, j, currDist+w[i][j], minDist)
+	}
+	if j < n-1 {
+		backTrackMinDist(w, n, i, j+1, currDist, minDist)
+	}
+}
+
+func dpMinDist(w [][]int, n int) int {
+	state := make([][]int, n)
+	for i := range state {
+		state[i] = make([]int, n)
+	}
+	// 初始化
+	temp := 0
+	for i := 0; i < n; i++ {
+		state[i][0] = w[i][0]+temp
+		temp = state[i][0]
+	}
+	temp = 0
+	for j := 0; j < n; j++ {
+		state[0][j] = w[0][j]+temp
+		temp = state[0][j]
+	}
+
+	for i := 1; i < n; i++ {
+		for j := 1; j < n; j++ {
+			if state[i-1][j] < state[i][j-1] {
+				state[i][j] = w[i][j] + state[i-1][j]
+			} else {
+				state[i][j] = w[i][j] + state[i][j-1]
+			}
+		}
+	}
+	
+	return state[n-1][n-1]
+}
