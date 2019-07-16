@@ -193,6 +193,7 @@ func minCoins(money int) int {
 	if money >= 5 {
 		state[0][5] = true
 	}
+
 	i := 1
 	num := 0
 
