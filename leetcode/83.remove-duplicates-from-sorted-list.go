@@ -11,9 +11,6 @@
  * }
  */
 func deleteDuplicates(head *ListNode) *ListNode {
-	if head == nil {
-		return nil
-	}
 	p := head
 	for p != nil {
 		q := p.Next
