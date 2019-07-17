@@ -97,3 +97,4 @@ func reverseInRecursiveWay(head *Node, p *Node) {
 	p.Next.Next = p
 	p.Next = nil
 }
+
