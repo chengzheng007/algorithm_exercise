@@ -33,9 +33,8 @@ func isPalindrome(head *ListNode) bool {
 	}
 	for q != nil {
 		// 翻转遍历时查找真正的尾节点
-		if q != nil {
-			endNode = q
-		}
+		endNode = q
+
 		r := q.Next
 		q.Next = p
 		p = q
