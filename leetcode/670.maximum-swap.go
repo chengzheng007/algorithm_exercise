@@ -7,8 +7,7 @@ func maximumSwap(num int) int {
 	list := make([]int, 0)
 	temp := num
 	for temp > 0 {
-		n := temp % 10
-		list = append(list, n)
+		list = append(list, temp%10)
 		temp /= 10
 	}
 	size := len(list)
