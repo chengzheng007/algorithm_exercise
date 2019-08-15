@@ -38,13 +38,18 @@ func main() {
 
 	fmt.Printf("tree height:%d\n", treeHeightRec(root))
 	fmt.Printf("tree height treeHeightByQueue:%d\n", treeHeightByQueue(root))
+
+	fmt.Println()
+	fmt.Printf("left view of tree:%v\n", leftViewOfBinTree(root))
+	fmt.Printf("right view of tree:%v\n", rightViewOfBinTree(root))
+	
 }
 
 func initBTree() *Node {
 	root := &Node{Data:"A"}
 	root.LChild = &Node{Data:"B"}
 	root.RChild = &Node{Data:"C"}
-	root.LChild.LChild = &Node{Data:"D"}
+	//root.LChild.LChild = &Node{Data:"D"}
 	//root.LChild.RChild = &Node{Data:"E"}
 	//root.RChild.LChild = &Node{Data:"F"}
 	root.RChild.RChild = &Node{Data:"G"}
@@ -272,4 +277,44 @@ func treeHeightByQueue(root *Node) int {
 	}
 	
 	return height
+}
+
+// 二叉树的左视图
+func leftViewOfBinTree(root *Node) []string {
+	lst := make([]string, 0)
+	findLeftViewNode(root, 0, &lst)
+	return lst
+}
+
+func findLeftViewNode(node *Node, level int, lst *[]string) {
+	if node == nil {
+		return 
+	}
+	// 判断是否是每层的第一个节点，如果是则放入数组
+	// 递归时一定先遍历左子树，保证左子树先出现
+	if level == len(*lst) {
+		*lst = append(*lst, node.Data)
+	}
+	findLeftViewNode(node.LChild, level+1, lst)
+	findLeftViewNode(node.RChild, level+1, lst)
+}
+
+// 二叉树的右视图
+func rightViewOfBinTree(root *Node) []string {
+	lst := make([]string, 0)
+	findRightViewNode(root, 0, &lst)
+	return lst
+}
+
+func findRightViewNode(node *Node, level int, lst *[]string) {
+	if node == nil {
+		return
+	}
+	// 判断是否是每层的【最后】一个节点，如果是则放入数组
+	// 递归时一定先遍历右子树，保证右子树先出现
+	if level == len(*lst) {
+		*lst = append(*lst, node.Data)
+	}
+	findLeftViewNode(node.RChild, level+1, lst)
+	findLeftViewNode(node.LChild, level+1, lst)
 }
