@@ -85,6 +85,21 @@ func (q *arrayQueue) Dequeue() (int, bool) {
 	return x, true
 }
 
-func (q *arrayQueue) Len() int {
+func (q arrayQueue) Len() int {
 	return (q.tail + q.capacity - q.head) % q.capacity
+}
+
+func (q arrayQueue) String() string {
+	outputFormat := `{len:%d, head:%d, tail:%d, data:{%s}}`
+	kvstrFormat := "%d:%d"
+	kvdata := ""
+	i := q.head
+	for i != q.tail {
+		if kvdata != "" {
+			kvdata += " "
+		}
+		kvdata += fmt.Sprintf(kvstrFormat, i, q.list[i])
+		i = (i+1)%q.capacity
+	}
+	return fmt.Sprintf(outputFormat, q.Len(), q.head, q.tail, kvdata)
 }
