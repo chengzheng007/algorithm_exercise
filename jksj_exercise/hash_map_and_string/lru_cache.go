@@ -15,6 +15,7 @@ type lruCache struct {
 	capacity int
 	count    int
 	hashMap  map[string]*dblistNode
+	// 双向链表
 	root     *dblistNode
 }
 
@@ -72,6 +73,8 @@ func (lch *lruCache) Get(k string) int {
 func (lch *lruCache) addNode(node *dblistNode) {
 	node.next = lch.root.next
 	node.prev = lch.root
+	// 因为这个指向，导致最初第一个节点插入的时候
+	// 并且再次增加节点时，也不会被修改，刚好可以用来寻找最后一个节点
 	node.next.prev = node
 	lch.root.next = node
 }
@@ -95,6 +98,7 @@ func (lch *lruCache) moveToHead(node *dblistNode) {
 
 // popTail do pop tail node of list
 func (lch *lruCache) popTail() *dblistNode {
+	// 双向循环链表，决定了root.prev指向的是链表的最后一个节点
 	node := lch.root.prev
 	// no node in list
 	if node == lch.root {
