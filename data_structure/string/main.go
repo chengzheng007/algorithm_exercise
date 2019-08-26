@@ -5,7 +5,7 @@ import "fmt"
 func main() {
 	//bf test
 	mains := "abdbcef"
-	pattern := "a"
+	pattern := "c"
 
 	idx := bf(mains, pattern)
 	fmt.Printf("bf find pattern(%s) index:%d\n", pattern, idx)

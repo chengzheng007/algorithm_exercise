@@ -15,8 +15,8 @@ func bf(mains, pattern string) int {
 			i++
 			j++
 		} else {
-			j = 0
 			i = i - j + 1
+			j = 0
 		}
 	}
 
