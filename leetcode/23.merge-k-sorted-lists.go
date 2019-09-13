@@ -52,6 +52,8 @@ func mergeKLists(lists []*ListNode) *ListNode {
 		p.Next = node
 		p = p.Next
 		// 每次选出堆中最小值节点后，需将该节点所在数组的下一个节点加入堆中，进行下一轮比较
+		// 如何保证永远取的是所有元素中最小的？就在这里，只要取出一个元素，就要把它所在列表
+		// 的下一个元素添加进来，如果有的话
 		if node.Next != nil {
 			heap.Push(&pq, node.Next)
 		}

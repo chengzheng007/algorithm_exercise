@@ -42,12 +42,11 @@ func reorderList(head *ListNode) {
 		if p == middleNode || q == middleNode {
 			break
 		}
-		tempP := p.Next
 		tempQ := q.Next
-		q.Next = tempP
+		q.Next = p.Next
 		p.Next = q
-		p = tempP
 		q = tempQ
+		p = p.Next.Next
 	}
 	// 不要忘了将中间节点的Next置空，否则形成循环链表
 	if middleNode != nil {

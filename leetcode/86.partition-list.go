@@ -29,7 +29,6 @@ func partition(head *ListNode, x int) *ListNode {
 		// 如果r为空，则当前列表说明不存在值大于x的节点
 		for r != nil && r.Next != nil && r.Next.Val >= x {
 			r = r.Next
-
 		} // end: 大于等于x的节点区间为[p, r]
 
 		var nextr *ListNode
@@ -37,6 +36,7 @@ func partition(head *ListNode, x int) *ListNode {
 			nextr = r.Next
 		}
 
+		// 将[p,r]间的节点移动到nextr节点后面
 		// nextr不为空，说明还有后续节点
 		if nextr != nil {
 			r.Next = nextr.Next
