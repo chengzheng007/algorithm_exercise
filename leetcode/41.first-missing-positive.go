@@ -8,26 +8,26 @@ import (
 )
 
 func firstMissingPositive(nums []int) int {
-	// sort by asc
-	sort.Sort(sort.IntSlice(nums))
-	size := len(nums)
+	// 凡是未明确说不能用排序的，都能用排序处理，只要利于解题
+	sort.Ints(nums)
 	var (
-		low  = 1
-		last int
+		// 缺失的最小正数
+		low = 1
+		// 上一个遍历的正数
+		lastNum int
 	)
-	for i := 0; i < size; i++ {
-		if nums[i] <= 0 {
+	for _, num := range nums {
+		// <=0的过滤
+		if num <= 0 {
 			continue
 		}
-		// if great than low, find the min,missing positive num
-		if nums[i] > low {
+		if num > low {
 			return low
 		}
-		// if num i less than and it doesn't exist previously(e.x. [1,1,2,2])
-		if nums[i] <= low && nums[i] != last {
-			low += 1
+		if num <= low && lastNum != num {
+			low++
 		}
-		last = nums[i]
+		lastNum = num
 	}
 	return low
 }
