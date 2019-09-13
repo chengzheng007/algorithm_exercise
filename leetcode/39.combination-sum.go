@@ -5,28 +5,25 @@
  */
 func combinationSum(candidates []int, target int) [][]int {
 	result := make([][]int, 0)
-	nums := make([]int, 0)
-	bt(candidates, target, 0, nums, &result)
+	cand := make([]int, 0)
+	bt(candidates, target, 0, cand, 0, &result)
 	return result
 }
 
-func bt(candidates []int, target, start int, nums []int, result *[][]int) {
-	sum := 0
-	for _, num := range nums {
-		sum += num
-	}
-	if sum == target {
-		*result = append(*result, nums)
-		nums = []int{}
+// 回溯
+func bt(candidates []int, target, start int, currCand []int, currSum int, result *[][]int) {
+	if currSum == target {
+		*result = append(*result, currCand)
+		return
+	} else if currSum > target {
+		return
 	}
 	for i := start; i < len(candidates); i++ {
-		nums1 := make([]int, len(nums)+1)
-		copy(nums1, nums)
-		nums1[len(nums)] = candidates[i]
-		// 如果和比目标值小，继续递归用当前值计算
-		if sum < target {
-			bt(candidates, target, i, nums1, result)
-		}
+		candNew := make([]int, len(currCand)+1)
+		copy(candNew[0:len(currCand)], currCand)
+		candNew[len(currCand)] = candidates[i]
+		// 继续递归用当前值计算，直到比target大才换成下一个值
+		bt(candidates, target, i, candNew, currSum+candidates[i], result)
 	}
 }
 
