@@ -4,27 +4,27 @@
  * [46] Permutations
  */
 func permute(nums []int) [][]int {
-	size := len(nums)
-	allSubSet := make([][]int, 0)
-	backtrack(nums, size, 0, &allSubSet)
-	return allSubSet
+	n := len(nums)
+	result := make([][]int, 0)
+	backtrack(nums, n, 0, &result)
+	return result
 }
 
-// 参考：http://wuchong.me/blog/2014/07/28/permutation-and-combination-realize/
-func backtrack(nums []int, size, k int, allSubSet *[][]int) {
-	if k == size-1 {
-		list := make([]int, size)
-		copy(list, nums)
-		*allSubSet = append(*allSubSet, list)
+func backtrack(nums []int, n, start int, result *[][]int) {
+	if start == n {
+		// 这里必须临时复制一份，因为各个函数会对nums造成影响
+		// 递归返回后，将数据换回来，导致result中
+		// 的排列都是换回来的结果
+		temp := make([]int, n)
+		copy(temp, nums)
+		*result = append(*result, temp)
 		return
-	} else {
-		// 将下标为k的数开始，分别与它及后面的数交换
-		for i := k; i < size; i++ {
-			nums[i], nums[k] = nums[k], nums[i]
-			backtrack(nums, size, k+1, allSubSet)
-			// 交换回来
-			nums[k], nums[i] = nums[i], nums[k]
-		}
+	}
+	// 外层：i从start循环到n，将这之间的数与下标为start的数交换
+	// 每换一次递归处理本次换完后的情况
+	for i := start; i < n; i++ {
+		nums[i], nums[start] = nums[start], nums[i]
+		backtrack(nums, n, start+1, result)
+		nums[start], nums[i] = nums[i], nums[start]
 	}
 }
-
