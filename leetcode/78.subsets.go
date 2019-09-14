@@ -18,7 +18,8 @@ func subsets(nums []int) [][]int {
 // 		*sets = append(*sets, currSet)
 // 		return
 // 	}
-// 	// 不选第i个元素
+// 	// 不选第i个元素，先递归到最后一个索引处，然后每次向前一步，接着又往后递归
+//  // 因此在i==size时才将子集加到结果集中
 // 	backtrack(i+1, size, nums, currSet, sets)
 
 // 	// 选第i个元素
@@ -37,7 +38,6 @@ func backtrack2(nums []int, size, start int, currSet []int, sets *[][]int) {
 		copy(currSet2, currSet)
 		currSet2[len(currSet)] = nums[i]
 		backtrack2(nums, size, i+1, currSet2, sets)
-		currSet = currSet2[0 : len(currSet2)-1]
 	}
 }
 
