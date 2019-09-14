@@ -28,6 +28,12 @@ func genTree(preorder, inorder []int, rootIdxAtPreArr, lIdxAtIn, rIdxAtIn int) *
 		return nil
 	}
 
+	node := &TreeNode{Val: preorder[rootIdxAtPreArr]}
+	// 左右边界相等，只有这一个节点，直接返回无需递归
+	if lIdxAtIn == rIdxAtIn {
+		return node
+	}
+
 	// 在中序数组中找根节点的位置
 	var rootIdxAtInArr int
 	for i := lIdxAtIn; i <= rIdxAtIn; i++ {
@@ -35,12 +41,6 @@ func genTree(preorder, inorder []int, rootIdxAtPreArr, lIdxAtIn, rIdxAtIn int) *
 			rootIdxAtInArr = i
 			break
 		}
-	}
-
-	node := &TreeNode{Val: inorder[rootIdxAtInArr]}
-	// 左右边界相等，只有这一个节点，直接返回无需递归
-	if lIdxAtIn == rIdxAtIn {
-		return node
 	}
 
 	// 计算左子树的根节点下标
