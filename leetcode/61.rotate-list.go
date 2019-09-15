@@ -42,7 +42,7 @@ func rotateRight(head *ListNode, k int) *ListNode {
 		kNode = kNode.Next
 	}
 
-	if kNode == nil {
+	if kNode == nil { // 不够凑成一组
 		return newHead
 	}
 
