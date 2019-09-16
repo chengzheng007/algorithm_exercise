@@ -10,8 +10,6 @@
  *     Next *ListNode
  * }
  */
-// 先让一个节点q指向第n个，然后将p、q顺序后移，到q是最后一个节点时
-// p指向倒数第n个节点的前驱，特殊情况：链表本身不足n个节点，删除的是第一个节点
 func removeNthFromEnd(head *ListNode, n int) *ListNode {
 	if head == nil {
 		return nil
@@ -40,6 +38,7 @@ func removeNthFromEnd(head *ListNode, n int) *ListNode {
 		q = q.Next
 	}
 	// 删除节点为第一个节点
+	// 比如只有一个节点并删除倒数第一个节点
 	if p == head && q == nil {
 		head = head.Next
 		return head
