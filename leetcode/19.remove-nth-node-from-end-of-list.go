@@ -11,42 +11,42 @@
  * }
  */
 func removeNthFromEnd(head *ListNode, n int) *ListNode {
+	// 两个指针，一个在第一个节点，一个指向后面与之相距n-1个节点
+	// 然后两个指针同时移到到末尾，前一个指针指向的是倒数第n个节点
+	// 的前驱，如果存在的话
 	if head == nil {
 		return nil
 	}
-	// p 作为待删除节点的前驱，q指向与p距离n-1个节点的节点
 	p := head
 	q := head
 	i := 0
+	// p指向第一个节点，通过计数方式将q指向与之相距n-1的节点
 	for i < n {
 		if q != nil {
 			q = q.Next
 		}
 		i++
-		// 此处包含链表长度为1，或者删除节点为第一个节点时
 		if q == nil {
 			break
 		}
 	}
-	// 倒数第n个节点不存在，因链表本身不够长
-	if i != n {
-		return nil
+	// 倒数第n个不存在，链表不够长
+	if i < n {
+		return head
 	}
-	// 循环链表找到倒数第n个节点前驱
+	// p、q依次遍历到末尾
 	for q != nil && q.Next != nil {
 		p = p.Next
 		q = q.Next
-	}
-	// 删除节点为第一个节点
-	// 比如只有一个节点并删除倒数第一个节点
-	if p == head && q == nil {
+	} // end:p指向倒数第n个节点的前驱，q指向倒数第1个节点
+
+	// 删除的是第1个节点
+	// 特例：只有1个节点并删除它
+	if q == nil && p == head {
 		head = head.Next
 		return head
 	}
-	// 删除节点不是第一个节点
-	temp := p.Next
-	p.Next = temp.Next
-	temp = nil
+	p.Next = p.Next.Next
 	return head
 }
 
