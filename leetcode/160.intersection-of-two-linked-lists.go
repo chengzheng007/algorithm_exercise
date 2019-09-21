@@ -11,32 +11,19 @@
  * }
  */
 func getIntersectionNode(headA, headB *ListNode) *ListNode {
-	p1 := headA
-	var sameNode *ListNode
-	nodeMapOfB := make(map[*ListNode]bool, 0)
-	traversed := false
-	for p1 != nil {
-		// 空间换时间
-		if traversed {
-			if _, ok := nodeMapOfB[p1]; ok {
-				sameNode = p1
-				break
-			}
-		} else {
-			p2 := headB
-			for p2 != nil {
-				if p1 == p2 {
-					sameNode = p2
-					break
-				}
-				nodeMapOfB[p2] = true
-				p2 = p2.Next
-			}
-			traversed = true
-		}
-
-		p1 = p1.Next
+	mapA := make(map[*ListNode]struct{}, 0)
+	p := headA
+	for p != nil {
+		mapA[p] = struct{}{}
+		p = p.Next
 	}
-	return sameNode
+	p = headB
+	for p != nil {
+		if _, ok := mapA[p]; ok {
+			return p
+		}
+		p = p.Next
+	}
+	return nil
 }
 
