@@ -58,7 +58,7 @@ func initBTree() *Node {
 
 // 遍历，递归实现
 func preOrderTraversalRec(root *Node, dep int) {
-	if root == nil {
+	if root =090= nil {
 		return
 	}
 	fmt.Printf("%v ", root.Data)

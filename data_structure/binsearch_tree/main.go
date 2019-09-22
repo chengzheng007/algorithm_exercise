@@ -123,7 +123,7 @@ func delete(bst *BinSearchTree, x int) bool {
 	if bst == nil || bst.Root == nil {
 		return false
 	}
-
+	// 寻找当前节点及其父节点
 	var pre *Node
 	p := bst.Root
 	for p != nil && p.Data != x {
@@ -143,6 +143,7 @@ func delete(bst *BinSearchTree, x int) bool {
 	}
 
 	//待删除节点有两个子节点
+	//查找其【右子树】的最左子节点（该节点一定在没有左子节点）
 	if p.LChild != nil && p.RChild != nil {
 		minP := p.RChild
 		minPP := p // 表示minP的父节点
