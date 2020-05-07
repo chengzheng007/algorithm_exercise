@@ -1,8 +1,3 @@
-/*
- * @lc app=leetcode id=19 lang=golang
- *
- * [19] Remove Nth Node From End of List
- */
 /**
  * Definition for singly-linked list.
  * type ListNode struct {
@@ -11,42 +6,33 @@
  * }
  */
 func removeNthFromEnd(head *ListNode, n int) *ListNode {
-	// 两个指针，一个在第一个节点，一个指向后面与之相距n-1个节点
-	// 然后两个指针同时移到到末尾，前一个指针指向的是倒数第n个节点
-	// 的前驱，如果存在的话
 	if head == nil {
 		return nil
 	}
-	p := head
-	q := head
-	i := 0
-	// p指向第一个节点，通过计数方式将q指向与之相距n-1的节点
-	for i < n {
-		if q != nil {
-			q = q.Next
-		}
-		i++
-		if q == nil {
-			break
-		}
-	}
-	// 倒数第n个不存在，链表不够长
-	if i < n {
-		return head
-	}
-	// p、q依次遍历到末尾
-	for q != nil && q.Next != nil {
-		p = p.Next
-		q = q.Next
-	} // end:p指向倒数第n个节点的前驱，q指向倒数第1个节点
+	newHead := new(ListNode)
+	newHead.Next = head
 
-	// 删除的是第1个节点
-	// 特例：只有1个节点并删除它
-	if q == nil && p == head {
-		head = head.Next
-		return head
+	tail := newHead
+	for i := 0; i < n; i++ {
+		tail = tail.Next
+		// 节点数不够n
+		if tail == nil {
+			return head
+		}
 	}
-	p.Next = p.Next.Next
-	return head
+
+	// 设定好，要删除倒数第3个节点，那么tail与preLastN之间的节点数为n-1
+	// 例如总共5个节点，for循环后tail应指向第5个节点，preLastN则指向头结点
+	// 删除的时候preLastN则指向头结点指向他的下一个即可
+	// 也就是tail要指向链表中的第n个节点（不含头结点）
+
+	// 倒数第n个节点的前驱节点
+	preLastN := newHead
+	for tail.Next != nil {
+		preLastN = preLastN.Next
+		tail = tail.Next
+	}
+	// 删除节点
+	preLastN.Next = preLastN.Next.Next
+	return newHead.Next
 }
-
