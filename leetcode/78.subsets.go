@@ -51,7 +51,7 @@ func backtrack2(nums []int, size, start int, currSet []int, sets *[][]int) {
 
 // 另一种方法：每一个数可选可不选，假设n为总个数
 // 则集合中肯定有2^n个元素（包含空集合）
-func subsets(nums []int) [][]int {
+func subsets2(nums []int) [][]int {
 	// 位运算
 	totalSetNum := 1 << len(nums)
 	totalSet := make([][]int, totalSetNum)
@@ -69,3 +69,18 @@ func subsets(nums []int) [][]int {
 	return totalSet
 }
 
+// 另一种回溯写法
+func backtrack3(nums []int, n, i int, curSet []int, res *[][]int) {
+	if i == n {
+		*res = append(*res, curSet)
+		return
+	}
+	// 不选第i个元素
+	subsetBacktrack2(nums, n, i+1, curSet, res)
+
+	// 选第i个元素
+	curSet2 := make([]int, len(curSet)+1)
+	copy(curSet2, curSet)
+	curSet2[len(curSet)] = nums[i]
+	subsetBacktrack2(nums, n, i+1, curSet2, res)
+}
