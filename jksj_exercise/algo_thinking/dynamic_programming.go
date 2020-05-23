@@ -39,7 +39,7 @@ func knapsack(weight []int, n int, maxW int) int {
 
 	fmt.Printf("选择了以下编号的商品:\n")
 	p := j
-	for i := n-1; i >= 1; i-- {
+	for i := n - 1; i >= 1; i-- {
 		// 选择了第i件物品，当前状态(i,p)从(i-1,p-weight[i])转移过来
 		if p-weight[i] >= 0 && state[i-1][p-weight[i]] {
 			fmt.Printf("index:%d weight:%d\n", i, weight[i])
@@ -49,8 +49,51 @@ func knapsack(weight []int, n int, maxW int) int {
 	if p > 0 {
 		fmt.Printf("index:%d weight:%d\n", 0, weight[0])
 	}
-	
+
+	// 以上只能求出一个解
+	var (
+		res  [][]int
+		path []int
+	)
+	res = getSolution(weight, state, len(weight), len(weight)-1, j, path, res)
+	fmt.Printf("solution\n")
+	for _, sol := range res {
+		fmt.Printf("%v\n", sol)
+	}
+
 	return j
+}
+
+// 回溯法求出所有可行的解
+func getSolution(weight []int, state [][]bool, n, i, cw int, path []int, res [][]int) [][]int {
+	if i == 0 && cw == 0 {
+		temp := make([]int, len(path))
+		copy(temp, path)
+		res = append(res, path)
+		return res
+	}
+
+	if !state[i][cw] {
+		return res
+	}
+
+	if i > 0 {
+		if state[i-1][cw] { // 没有选第i件物品
+			res = getSolution(weight, state, n, i-1, cw, path, res)
+		}
+		if cw-weight[i] >= 0 && state[i-1][cw-weight[i]] { // 选择了第i件物品
+			path = append(path, i)
+			res = getSolution(weight, state, n, i-1, cw-weight[i], path, res)
+			path = path[:len(path)-1]
+		}
+	} else if i == 0 && cw > 0 { // state第0行例外检查下有没有可能添加weight中第0件物品
+		if cw-weight[i] >= 0 && state[i][cw-weight[i]] {
+			path = append(path, i)
+			res = getSolution(weight, state, n, i, cw-weight[i], path, res)
+			path = path[:len(path)-1]
+		}
+	}
+	return res
 }
 
 func knapsack2(weight []int, n int, maxW int) int {
@@ -62,7 +105,7 @@ func knapsack2(weight []int, n int, maxW int) int {
 	}
 	for i := 1; i < n; i++ {
 		// 放置第i个物品
-		for j := maxW-weight[i]; j >= 0; j-- {
+		for j := maxW - weight[i]; j >= 0; j-- {
 			if state[j] {
 				state[j+weight[i]] = true
 			}
@@ -85,14 +128,13 @@ func knapsack3(weight, value []int, n, maxW int) int {
 			state[i][j] = -1
 		}
 	}
-	
 
 	// 初始化
 	state[0][0] = 0
 	if weight[0] <= maxW {
 		state[0][weight[0]] = value[0]
 	}
-	
+
 	for i := 1; i < n; i++ {
 		// 不选择第i个物品
 		for j := 0; j <= maxW; j++ {
@@ -100,10 +142,10 @@ func knapsack3(weight, value []int, n, maxW int) int {
 				state[i][j] = state[i-1][j]
 			}
 		}
-		
-	    // 选择第i个物品
-	    for j := 0; j <= maxW-weight[i]; j++ {
-			v := state[i-1][j]+value[i]
+
+		// 选择第i个物品
+		for j := 0; j <= maxW-weight[i]; j++ {
+			v := state[i-1][j] + value[i]
 			// 存储比原来大的，小于的丢弃
 			if v > state[i][j+weight[i]] {
 				state[i][j+weight[i]] = v
@@ -147,12 +189,12 @@ func dpMinDist(w [][]int, n int) int {
 	// 初始化
 	temp := 0
 	for i := 0; i < n; i++ {
-		state[i][0] = w[i][0]+temp
+		state[i][0] = w[i][0] + temp
 		temp = state[i][0]
 	}
 	temp = 0
 	for j := 0; j < n; j++ {
-		state[0][j] = w[0][j]+temp
+		state[0][j] = w[0][j] + temp
 		temp = state[0][j]
 	}
 
@@ -165,7 +207,7 @@ func dpMinDist(w [][]int, n int) int {
 			}
 		}
 	}
-	
+
 	return state[n-1][n-1]
 }
 
@@ -176,7 +218,7 @@ func minCoins(money int) int {
 	if money == 1 || money == 3 || money == 5 {
 		return 1
 	}
-	
+
 	state := make([][]bool, money)
 	for i := range state {
 		state[i] = make([]bool, money+1)
@@ -197,7 +239,7 @@ func minCoins(money int) int {
 	i := 1
 	num := 0
 
-	loop:
+loop:
 	for ; i < money; i++ {
 		for j := 1; j <= money; j++ {
 			if state[i-1][j] {
@@ -211,7 +253,7 @@ func minCoins(money int) int {
 					state[i][j+5] = true
 				}
 				if state[i][money] {
-					num = i+1
+					num = i + 1
 					break loop
 				}
 			}
