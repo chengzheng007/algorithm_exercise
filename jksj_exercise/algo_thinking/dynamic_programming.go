@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 // 0-1 package problem
 // dynamic programming
@@ -214,74 +217,71 @@ func dpMinDist(w [][]int, n int) int {
 /* 钱币找零 dp
  * 分别有1元、3元、5元若干张纸币，找9元，最少可以是多少张
  */
-func minCoins(money int) int {
-	if money == 1 || money == 3 || money == 5 {
-		return 1
-	}
 
-	state := make([][]bool, money)
-	for i := range state {
-		state[i] = make([]bool, money+1)
-	}
+func findChangeDfs(m int, coins []int) int {
+	min := math.MaxInt64
+	findChangeBacktrack(m, coins, 0, 0, 0, &min)
+	return min
+}
 
-	// 初始化
-	state[0][0] = true
-	if money >= 1 {
-		state[0][1] = true
+// num：零钱的张数
+// 首先探寻回溯类型的算法，可以发现是以 f(当前金额,当前张数) 作为递归函数的核心使用参数
+// 以这两个变量画递归树，会出现重复节点
+func findChangeBacktrack(m int, coins []int, k, curr, num int, min *int) {
+	// 零钱找到了最后一种或已找到符合数量的零钱
+	if curr >= m {
+		if curr == m && num < *min {
+			*min = num
+		}
+		return
 	}
-	if money >= 3 {
-		state[0][3] = true
+	for i := k; i < len(coins); i++ {
+		if curr+coins[i] <= m {
+			// 不足时，先用当前面额的零钱凑齐
+			// 当面额足够时，算算耗费的纸币数，比最小的纸币数要小时记录下来(前提是刚好凑齐额度)
+			// 然后再递归用下一个
+			findChangeBacktrack(m, coins, i, curr+coins[i], num+1, min)
+		}
 	}
-	if money >= 5 {
-		state[0][5] = true
-	}
+}
 
-	i := 1
-	num := 0
+// 钱币找零dp
+// 因此在dp解法中，需要围绕 [当前金额，当前张数] 构造状态变量
+// 可以用一个[]int整型数组，长度为金额+1
+func findChangeDP(m int, coins []int) int {
+	dp := make([]int, m+1) // 下标表示金额，值表示该金额对应最小找零纸币数
+	// 初始化可以不用，状态转移已经包含零钱等值情况
+	// for _, num := range coins {
+	// 	// 初始化状态
+	// 	if num <= m {
+	// 		dp[num] = 1
+	// 	}
+	// }
 
-loop:
-	for ; i < money; i++ {
-		for j := 1; j <= money; j++ {
-			if state[i-1][j] {
-				if j+1 <= money {
-					state[i][j+1] = true
-				}
-				if j+3 <= money {
-					state[i][j+3] = true
-				}
-				if j+5 <= money {
-					state[i][j+5] = true
-				}
-				if state[i][money] {
-					num = i + 1
-					break loop
-				}
+	// 填充剩下状态
+	for i := 1; i <= m; i++ {
+		min := math.MaxInt64
+		// 不用找所有，只需寻找i-money中的金额的下标，因为i-money中金额在money中一定会出现
+		// 那么dp[i]一定等于dp[i-money]+1，并且最小的也诞生在这些里面
+		// for j := 1; j < i; j++ {
+		// 	if _, ok := moneyMP[j]; ok {
+		// 		num := dp[i-j] + 1
+		// 		if num < min {
+		// 			min = num
+		// 		}
+		// 	}
+		// }
+		for _, coin := range coins {
+			if i-coin >= 0 && dp[i-coin]+1 < min {
+				min = dp[i-coin] + 1
 			}
 		}
+		dp[i] = min
 	}
 
-	// 打印找了多少面额的钱
-	j := money
-	for p := i; p >= 1; p-- {
-		if j-1 >= 0 && state[p-1][j-1] {
-			fmt.Printf("select 1 yuan.\n")
-			j -= 1
-		} else if j-3 >= 0 && state[p-1][j-3] {
-			fmt.Printf("select 3 yuan.\n")
-			j -= 3
-		} else if j-5 >= 0 && state[p-1][j-5] {
-			fmt.Printf("select 5 yuan.\n")
-			j -= 5
-		}
-	}
-	if j > 0 {
-		fmt.Printf("select %d yuan.\n", j)
-	}
-	if num > 0 {
-		return num
+	if dp[m] == math.MaxInt64 {
+		return -1 // 无解
 	}
 
-	fmt.Printf("all select 1 yuan.\n")
-	// 全部是1元找零
-	return money
+	return dp[m]
 }
