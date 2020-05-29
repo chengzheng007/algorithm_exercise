@@ -33,3 +33,39 @@ func longestPalindrome(s string) string {
 	return s[start : start+maxLen]
 }
 
+// 另一种解法，实际复杂度是n^3，较慢
+func longestPalindrome2(s string) string {
+	if len(s) <= 1 {
+		return s
+	}
+	dp := make([]int, len(s))
+	dp[0] = 1
+	var l, r int
+	// dp[i]存储从i往后最长的回文串的下标
+	for i := 0; i < len(s); i++ {
+		for j := dp[i] - 1; j < len(s); j++ {
+			if isPalindrome(s, i, j) {
+				dp[i] = j
+			}
+		}
+
+		// 记录差值最大的回文串下标
+		if r-l < dp[i]-i {
+			l = i
+			r = dp[i]
+		}
+	}
+
+	return s[l : r+1]
+}
+
+func isPalindrome(s string, i, j int) bool {
+	for i < j {
+		if s[i] != s[j] {
+			return false
+		}
+		i++
+		j--
+	}
+	return true
+}
