@@ -10,23 +10,23 @@ func isValidBST(root *TreeNode) bool {
 	if root == nil {
 		return true
 	}
-	res, val := true, root.Val
-	doValidJudge(&res, root.Left, nil, &val)
-	doValidJudge(&res, root.Right, &val, nil)
-	return res
+	val := root.Val
+	return dfs(root.Left, nil, &val) && dfs(root.Right, &val, nil)
 }
 
-func doValidJudge(res *bool, node *TreeNode, lower, upper *int) {
-	if node == nil || !*res {
-		return
+func dfs(node *TreeNode, lower, upper *int) bool {
+	if node == nil {
+		return true
 	}
-	if (lower != nil && node.Val <= *lower) ||
-		(upper != nil && node.Val >= *upper) {
-		*res = false
-		return
+	// 右子节点需要比lower大，比他小不合理，lower规定了右分支的下界
+	if lower != nil && node.Val <= *lower {
+		return false
+	}
+	// 左子节点需要比upper小，比他大不合理，upper规定了左分支的上界
+	if upper != nil && node.Val >= *upper {
+		return false
 	}
 
 	val := node.Val
-	doValidJudge(res, node.Left, lower, &val)
-	doValidJudge(res, node.Right, &val, upper)
+	return dfs(node.Left, lower, &val) && dfs(node.Right, &val, upper)
 }
