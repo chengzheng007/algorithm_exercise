@@ -6,7 +6,6 @@ func main() {
 	bitMap := NewBitMap(10000)
 	fmt.Printf("bitmap len:%d\n", bitMap.Len())
 
-
 	var num int64 = 1
 	bitMap.Set(num)
 
@@ -34,7 +33,6 @@ func main() {
 	num = 95
 	bitMap.Set(num)
 
-
 	num = 9900
 	bitMap.Set(num)
 
@@ -55,7 +53,7 @@ func main() {
 
 type bitMap struct {
 	byteArr []byte
-	nbit int64
+	nbit    int64
 }
 
 func NewBitMap(n int64) *bitMap {
@@ -97,12 +95,12 @@ func (bm *bitMap) Len() int {
 	return len(bm.byteArr)
 }
 
-func  (bm *bitMap) List() []int {
+func (bm *bitMap) List() []int {
 	size := bm.Len()
 	var list []int
 	for byteIdx := 0; byteIdx < size; byteIdx++ {
 		for bitIdx := 0; bitIdx < 8; bitIdx++ {
-			if bm.byteArr[byteIdx] & (1 << uint(bitIdx)) != 0 {
+			if bm.byteArr[byteIdx]&(1<<uint(bitIdx)) != 0 {
 				list = append(list, 8*byteIdx+bitIdx)
 			}
 		}

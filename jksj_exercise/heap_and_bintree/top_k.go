@@ -17,7 +17,7 @@ func topK(list []int, k int) []int {
 		i++
 	}
 	buildSmallTopHeap(heapList, k)
-	
+
 	// 处理剩余数据
 	for i < size {
 		// 如果比堆顶元素大，替换为堆顶元素，并从堆顶开始堆化
@@ -31,7 +31,7 @@ func topK(list []int, k int) []int {
 }
 
 func buildSmallTopHeap(list []int, k int) {
-	for i := k/2; i >= 1; i-- {
+	for i := k / 2; i >= 1; i-- {
 		smallTopHeapify(list, k, i)
 	}
 }
@@ -40,10 +40,10 @@ func smallTopHeapify(list []int, n, i int) {
 	for {
 		pos := i
 		if 2*i <= n && list[i] > list[2*i] {
-			pos = 2*i
+			pos = 2 * i
 		}
 		if 2*i+1 <= n && list[pos] > list[2*i+1] {
-			pos = 2*i+1
+			pos = 2*i + 1
 		}
 		if i == pos {
 			break
