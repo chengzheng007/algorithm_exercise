@@ -21,8 +21,8 @@ func newDirectedGraph(num int) *DirectedGraph {
 		return nil
 	}
 	dg := &DirectedGraph{
-		vertexNum:num,
-		adj: make([][]int, num),
+		vertexNum: num,
+		adj:       make([][]int, num),
 	}
 	return dg
 }
@@ -54,7 +54,7 @@ func (g *DirectedGraph) TopoSortByKahn() {
 			queue.PushBack(v)
 		}
 	}
-	
+
 	for queue.Len() > 0 {
 		vElem := queue.Front()
 		v := vElem.Value.(int)
@@ -78,7 +78,7 @@ func (g *DirectedGraph) TopoSortByDFS() {
 	for i, adjList := range g.adj {
 		for _, v := range adjList {
 			//i->v
-			inverseAdj[v] = append(inverseAdj[v], i)  // v->i
+			inverseAdj[v] = append(inverseAdj[v], i) // v->i
 		}
 	}
 	// 逆邻接表里，都是指向当前节点的顶点
