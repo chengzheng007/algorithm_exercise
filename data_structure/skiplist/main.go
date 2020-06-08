@@ -1,15 +1,15 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 	"time"
-	"fmt"
 )
 
 // 跳表练习
 
 func main() {
-	list := []int{6,3,7,9,1,12,35,233}
+	list := []int{6, 3, 7, 9, 1, 12, 35, 233}
 	psl := newSkipList()
 	for _, num := range list {
 		psl.Insert(num)
@@ -29,7 +29,7 @@ func main() {
 	fmt.Printf("p:%+v\n", p)
 
 	fmt.Println()
-	
+
 	delNum := 9
 	ret := psl.Delete(delNum)
 	fmt.Printf("del %d ret:%v\n", delNum, ret)
@@ -67,7 +67,6 @@ func main() {
 	psl.Print()
 }
 
-
 const (
 	MAX_LEVEL = 7
 )
@@ -77,27 +76,27 @@ var (
 )
 
 type Node struct {
-	Val int
-	MaxLevel int  			// 当前节点所在最大层数
-	Next [MAX_LEVEL]*Node
+	Val      int
+	MaxLevel int // 当前节点所在最大层数
+	Next     [MAX_LEVEL]*Node
 }
 
 type SkipList struct {
-	MaxLevel int      // 最大层数
+	MaxLevel      int // 最大层数
 	MaxLevelNodes int // 最大层节点数
-	Head *Node
+	Head          *Node
 }
 
 func newSkipList() *SkipList {
 	return &SkipList{
-		Head:&Node{},
+		Head: &Node{},
 	}
 }
 
 func randomLevel() int {
 	var level = 1
 	for i := 1; i < MAX_LEVEL; i++ {
-		if random.Intn(1000) % 2 == 1 {
+		if random.Intn(1000)%2 == 1 {
 			level++
 		}
 	}
@@ -109,7 +108,7 @@ func (psl *SkipList) Insert(x int) {
 		fmt.Println("uninitialized skip list")
 		return
 	}
-	
+
 	var update [MAX_LEVEL]*Node
 	level := randomLevel()
 
@@ -120,7 +119,7 @@ func (psl *SkipList) Insert(x int) {
 
 	// 寻找每一层插入位置的前驱节点，记录在update中
 	p := psl.Head
-	for i := level-1; i >= 0; i-- {
+	for i := level - 1; i >= 0; i-- {
 		for p.Next[i] != nil && p.Next[i].Val < x {
 			p = p.Next[i]
 		}
@@ -128,8 +127,8 @@ func (psl *SkipList) Insert(x int) {
 	}
 
 	newNode := &Node{
-		Val:x,
-		MaxLevel:level,
+		Val:      x,
+		MaxLevel: level,
 	}
 
 	// 插入操作
@@ -155,7 +154,7 @@ func (psl *SkipList) Print() {
 
 	fmt.Printf("skip list max level:%d, max level nodes:%d\n", psl.MaxLevel, psl.MaxLevelNodes)
 
-	for i := psl.MaxLevel-1; i >= 0; i-- {
+	for i := psl.MaxLevel - 1; i >= 0; i-- {
 		fmt.Printf("%d(th) level:\n", i+1)
 		p := psl.Head
 		j := 1
@@ -173,7 +172,7 @@ func (psl *SkipList) Find(x int) *Node {
 		return nil
 	}
 	p := psl.Head
-	for i := psl.MaxLevel-1; i >= 0; i-- {
+	for i := psl.MaxLevel - 1; i >= 0; i-- {
 		for p.Next[i] != nil && p.Next[i].Val < x {
 			p = p.Next[i]
 		}
@@ -195,7 +194,7 @@ func (psl *SkipList) Delete(x int) bool {
 
 	var prev [MAX_LEVEL]*Node
 	p := psl.Head
-	for i := psl.MaxLevel-1; i >= 0; i-- {
+	for i := psl.MaxLevel - 1; i >= 0; i-- {
 		for p.Next[i] != nil && p.Next[i].Val < x {
 			p = p.Next[i]
 		}
@@ -212,7 +211,7 @@ func (psl *SkipList) Delete(x int) bool {
 		psl.MaxLevelNodes--
 	}
 
-	for i := psl.MaxLevel-1; i >= 0; i-- {
+	for i := psl.MaxLevel - 1; i >= 0; i-- {
 		if prev[i].Next[i] != nil && prev[i].Next[i].Val == x {
 			prev[i].Next[i] = prev[i].Next[i].Next[i]
 		}
@@ -221,13 +220,13 @@ func (psl *SkipList) Delete(x int) bool {
 	// 如果删除导致原本最上一层节点为0，下一层将变更为最大层
 	if psl.MaxLevelNodes == 0 {
 		// MaxLevel-1层为之前的最顶层
-		for i := psl.MaxLevel-2; i >= 0; i-- {
+		for i := psl.MaxLevel - 2; i >= 0; i-- {
 			p := psl.Head
 			for p.Next[i] != nil {
 				psl.MaxLevelNodes++
 				p = p.Next[i]
 			}
-			
+
 			psl.MaxLevel = i + 1
 			// 已将某一层更新为最上层
 			if psl.MaxLevelNodes > 0 {

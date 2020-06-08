@@ -7,7 +7,7 @@ import (
 // 二叉搜索树
 
 type Node struct {
-	Data int
+	Data   int
 	LChild *Node
 	RChild *Node
 }
@@ -21,8 +21,8 @@ func main() {
 
 	bst := &BinSearchTree{}
 
-	list := []int{33,16,50,13,18,34,58,15,17,25,51,66,19,27,55}
-	
+	list := []int{33, 16, 50, 13, 18, 34, 58, 15, 17, 25, 51, 66, 19, 27, 55}
+
 	for _, num := range list {
 		insert(bst, num)
 	}
@@ -67,29 +67,29 @@ func insert(bst *BinSearchTree, data int) {
 		return
 	}
 	if bst.Root == nil {
-		bst.Root = &Node{Data:data}
+		bst.Root = &Node{Data: data}
 		bst.Size = 1
 		return
 	}
-	
+
 	p := bst.Root
 	for p != nil {
 		if data < p.Data {
 			if p.LChild == nil {
-				p.LChild = &Node{Data:data}
+				p.LChild = &Node{Data: data}
 				bst.Size++
 				return
 			}
 			p = p.LChild
 		} else {
 			if p.RChild == nil {
-				p.RChild = &Node{Data:data}
+				p.RChild = &Node{Data: data}
 				bst.Size++
 				return
 			}
 			p = p.RChild
 		}
-	}		
+	}
 }
 
 func find(bst *BinSearchTree, x int) *Node {
@@ -136,7 +136,7 @@ func delete(bst *BinSearchTree, x int) bool {
 	}
 
 	//fmt.Printf("pre:%+v, p:%+v\n", pre, p)
-	
+
 	// 未找到该节点
 	if p == nil {
 		return false
@@ -147,7 +147,7 @@ func delete(bst *BinSearchTree, x int) bool {
 	if p.LChild != nil && p.RChild != nil {
 		minP := p.RChild
 		minPP := p // 表示minP的父节点
-		
+
 		for minP.LChild != nil {
 			minPP = minP
 			minP = minP.LChild
@@ -158,7 +158,7 @@ func delete(bst *BinSearchTree, x int) bool {
 		pre = minPP
 		//fmt.Printf("after transfom, pre:%+v, p:%+v\n", pre, p)
 	}
-	
+
 	// 删除的节点是叶子节点或只有一个子节点
 	var child *Node
 	if p.LChild != nil {
@@ -167,7 +167,7 @@ func delete(bst *BinSearchTree, x int) bool {
 		child = p.RChild
 	}
 
-	if pre == nil {  // 删除节点为根节点
+	if pre == nil { // 删除节点为根节点
 		bst.Root = nil
 	} else if pre.LChild == p {
 		pre.LChild = child
