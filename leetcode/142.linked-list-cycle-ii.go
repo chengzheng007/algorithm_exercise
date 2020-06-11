@@ -30,6 +30,7 @@ func detectCycle(head *ListNode) *ListNode {
 
 	// 寻找换入口
 	// 分析可参考：https://blog.csdn.net/wuzhekai1985/article/details/6725263
+	// https://www.jianshu.com/p/7608f44e1baf
 	p1 = head
 	p2 = encouter
 	for p1 != p2 {

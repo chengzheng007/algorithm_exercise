@@ -27,6 +27,10 @@ func rotateRight(head *ListNode, k int) *ListNode {
 		p = p.Next
 	}
 
+	if n == 0 {
+		return head
+	}
+
 	// 确定真实翻转个数
 	k = k % n
 	if k == 0 { // 无需翻转

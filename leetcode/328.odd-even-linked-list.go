@@ -1,8 +1,3 @@
-/*
- * @lc app=leetcode id=328 lang=golang
- *
- * [328] Odd Even Linked List
- */
 /**
  * Definition for singly-linked list.
  * type ListNode struct {
@@ -11,31 +6,28 @@
  * }
  */
 func oddEvenList(head *ListNode) *ListNode {
-	if head == nil {
-		return nil
+	if head == nil || head.Next == nil {
+		return head
 	}
-	oddH := new(ListNode)
-	p1 := oddH
-	evenH := new(ListNode)
-	p2 := evenH
+	h1 := new(ListNode)
+	h2 := new(ListNode)
+	pOdd := h1
+	pEven := h2
 	q := head
-	i := 1
+	num := 1
 	for q != nil {
-		// 将q摘出来，并断开
-		temp := q
-		q = q.Next
-		temp.Next = nil
-		if i%2 == 1 {
-			p1.Next = temp
-			p1 = temp
+		if num%2 == 1 {
+			pOdd.Next = q
+			pOdd = pOdd.Next
 		} else {
-			p2.Next = temp
-			p2 = temp
+			pEven.Next = q
+			pEven = pEven.Next
 		}
-		i++
+		q = q.Next
+		num++
 	}
-	// 将偶数序号的节点接在奇数序号最后一个节点的后边
-	p1.Next = evenH.Next
-	return oddH.Next
-}
 
+	pEven.Next = nil
+	pOdd.Next = h2.Next
+	return h1.Next
+}
