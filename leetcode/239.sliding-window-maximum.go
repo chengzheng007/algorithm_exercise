@@ -1,42 +1,36 @@
-import "container/list"
-
 /*
  * @lc app=leetcode id=239 lang=golang
  *
  * [239] Sliding Window Maximum
  */
 func maxSlidingWindow(nums []int, k int) []int {
-	size := len(nums)
-	numArr := make([]int, 0)
-	if size == 0 || size < k || k == 0 {
-		return numArr
-	}
-	// double ended queue
-	deque := list.New()
-	for i := 0; i < size; i++ {
-		// only store index that it point to num in array great or equal than current num
-		for deque.Len() > 0 {
-			elem := deque.Back()
-			idx := elem.Value.(int)
-			if nums[idx] < nums[i] {
-				deque.Remove(elem)
+	// q:双端队列，存储数组元素的下标
+	// 维持q内下标的元素单调递减，每次取队头比较
+	q := make([]int, 0)
+	res := make([]int, 0)
+	for idx, num := range nums {
+		// 如果当前位置比队列头部元素多出k个元素，删除多余元素
+		if len(q) > 0 && idx-q[0] >= k {
+			q = q[1:]
+		}
+
+		// 删除尾部比当前元素小的
+		for len(q) > 0 {
+			l := len(q)
+			if nums[q[l-1]] < num {
+				q = q[:l-1]
 			} else {
 				break
 			}
 		}
-		// add index to last
-		deque.PushBack(i)
-		// remove last sliding window's num by comparing index
-		elem := deque.Front()
-		if i-elem.Value.(int) == k {
-			deque.Remove(elem)
-		}
-		// process done one window, take out biggest num
-		if i >= k-1 {
-			idx := deque.Front().Value.(int)
-			numArr = append(numArr, nums[idx])
+
+		q = append(q, idx)
+
+		if idx >= k-1 {
+			// 追加最大的数字到结果集
+			res = append(res, nums[q[0]])
 		}
 	}
-	return numArr
-}
 
+	return res
+}

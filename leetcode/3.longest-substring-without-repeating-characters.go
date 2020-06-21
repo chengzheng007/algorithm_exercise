@@ -4,28 +4,26 @@
  * [3] Longest Substring Without Repeating Characters
  */
 func lengthOfLongestSubstring(s string) int {
-	size := len(s)
-	if size <= 1 {
-		return size
+	n := len(s)
+	if n <= 1 {
+		return n
 	}
-	res := 0
-	// l,r控制窗口
-	l := 0
-	r := -1
-	temp := make(map[byte]*struct{}, 0)
-	for l < size {
-		if r+1 < size && temp[s[r+1]] == nil {
-			r++ // 扩大窗口右边界
-			temp[s[r]] = &struct{}{}
+	set := make(map[byte]bool)
+	i, j := 0, 0
+	max := 0
+	for i < n && j < n {
+		if !set[s[j]] {
+			if max < j-i+1 {
+				max = j - i + 1
+			}
+			set[s[j]] = true
+			j++
 		} else {
-			// r到达有边界，或者遇到重复字符，窗口缩小
-			delete(temp, s[l])
-			l++
-		}
-		if r-l+1 > res {
-			res = r - l + 1
+			if _, ok := set[s[i]]; ok {
+				set[s[i]] = false
+			}
+			i++
 		}
 	}
-	return res
+	return max
 }
-
