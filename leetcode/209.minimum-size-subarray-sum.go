@@ -4,36 +4,29 @@
  * [209] Minimum Size Subarray Sum
  */
 func minSubArrayLen(s int, nums []int) int {
-	size := len(nums)
-	if size <= 0 {
+	n := len(nums)
+	sum := 0
+	left := 0
+	ans := n + 1
+	// 双指针：right右移sum增加，一旦发现sum>=s时，检测
+	// 长度是否更小，并且减去最左边的数，最左边的数由left
+	// 标记，减去最左边数后left加1，可分析出最对每个元素
+	// 最多被访问两边，因此总体上说时间复杂度是O(n)
+
+	for right := 0; right < n; right++ {
+		sum += nums[right]
+		for sum >= s {
+			if right-left+1 < ans {
+				ans = right - left + 1
+			}
+			sum -= nums[left]
+			left++
+		}
+	}
+
+	if ans == n+1 {
 		return 0
 	}
-	sum := 0
-	// 使用两个指针，类似滑动窗口
-	// 当窗口内的和小于s时，右指针向右移动扩大窗口
-	// 当sum>=s时，左指针向右移动，缩小窗口
-	// 根据下标差值可知数据长度
-	l := 0
-	r := -1
-	arrLen := size + 1
-	for l < size {
-		if r+1 < size && sum < s {
-			r++
-			sum += nums[r]
-		} else {
-			sum -= nums[l]
-			l++
-		}
-		if sum >= s {
-			if r-l+1 < arrLen {
-				arrLen = r - l + 1
-			}
-		}
-	}
-	// 没有找到和等于s的数
-	if arrLen == size+1 {
-		arrLen = 0
-	}
-	return arrLen
-}
 
+	return ans
+}
