@@ -24,6 +24,7 @@ func lengthOfLISDFS(nums []int, prev, currPos int) int {
 }
 
 // longestIncreasingSequence
+// 时间复杂度：O(n^2)
 func lisDP(digit []int) int {
 	size := len(digit)
 	if size <= 1 {

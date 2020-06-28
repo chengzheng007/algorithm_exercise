@@ -72,7 +72,7 @@ func getSolution(weight []int, state [][]bool, n, i, cw int, path []int, res [][
 	if i == 0 && cw == 0 {
 		temp := make([]int, len(path))
 		copy(temp, path)
-		res = append(res, path)
+		res = append(res, temp)
 		return res
 	}
 

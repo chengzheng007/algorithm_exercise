@@ -87,3 +87,35 @@ func lisDP(digit []int) int {
 	// }
 	return max
 }
+
+// 最长自增序列长度另一种解法：https://blog.csdn.net/wqtltm/article/details/81253935
+// 时间复杂度：O(n*logn)
+func lis2(list []int) int {
+	n := len(list)
+	if n <= 1 {
+		return n
+	}
+	dp := []int{list[0]}
+	for i := 1; i < n; i++ {
+		if list[i] > dp[len(dp)-1] {
+			dp = append(dp, list[i])
+		} else {
+			left := 0
+			right := len(dp) - 1
+			for left < right {
+				mid := (left + right) / 2
+				if dp[mid] == list[i] {
+					break
+				} else if list[i] > dp[mid] {
+					left = mid + 1
+				} else {
+					right = mid
+				}
+			}
+			dp[right] = list[i]
+		}
+	}
+
+	fmt.Printf("lis2 dp:%v\n", dp)
+	return len(dp)
+}
