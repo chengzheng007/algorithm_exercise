@@ -1,3 +1,5 @@
+import "math"
+
 /*
  * @lc app=leetcode id=53 lang=golang
  *
@@ -45,3 +47,19 @@ func maxSubArray(nums []int) int {
 	return max
 }
 
+// 另一种解法
+// https://en.wikipedia.org/wiki/Maximum_subarray_problem
+func traverse(nums []int) int {
+	smax := math.MinInt64
+	sum := 0
+	for _, num := range nums {
+		sum += num
+		if sum > smax {
+			smax = sum
+		}
+		if sum < 0 {
+			sum = 0
+		}
+	}
+	return smax
+}
