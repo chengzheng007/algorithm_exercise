@@ -37,3 +37,22 @@ func findMinDep(node *TreeNode, curr int, min *int) {
 	// 递归返回时撤销之前加上的深度
 	curr--
 }
+
+// 更简便的方法，本质也是dfs
+func minDepthV2(root *define.BinTreeNode) int {
+	if root == nil {
+		return 0
+	}
+	leftDepth := minDepth(root.Left)
+	rightDepth := minDepth(root.Right)
+	// 最小深度，当左右子树有一方为0时，返回另一方深度
+	// 为0的不参与计算
+	if leftDepth == 0 || rightDepth == 0 {
+		return leftDepth + rightDepth + 1
+	}
+
+	if leftDepth < rightDepth {
+		return leftDepth + 1
+	}
+	return rightDepth + 1
+}
