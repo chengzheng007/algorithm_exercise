@@ -7,26 +7,22 @@
  * }
  */
 func isValidBST(root *TreeNode) bool {
-	if root == nil {
-		return true
-	}
-	val := root.Val
-	return dfs(root.Left, nil, &val) && dfs(root.Right, &val, nil)
+    return validate(root, nil, nil)
 }
 
-func dfs(node *TreeNode, lower, upper *int) bool {
-	if node == nil {
-		return true
-	}
-	// 右子节点需要比lower大，比他小不合理，lower规定了右分支的下界
-	if lower != nil && node.Val <= *lower {
-		return false
-	}
-	// 左子节点需要比upper小，比他大不合理，upper规定了左分支的上界
-	if upper != nil && node.Val >= *upper {
-		return false
-	}
-
-	val := node.Val
-	return dfs(node.Left, lower, &val) && dfs(node.Right, &val, upper)
+func validate(node, leftMax, rightMin *TreeNode) bool {
+    if node == nil {
+        return true
+    }
+    // leftMax:最大值，左子树不能超过该值
+    // rightMin:最小值，右子树不能小于该值
+    if leftMax != nil && node.Val >= leftMax.Val {
+        return false
+    }
+    if rightMin != nil && node.Val <= rightMin.Val {
+        return false
+    }
+    // 递归定义，左子树不只是小于父节点，还得小于祖父等节点，右子树同理
+    // 右子树中的节点不仅大于父节点，还得大于祖父等节点(坑)
+    return validate(node.Left, node, rightMin) && validate(node.Right, leftMax, node)
 }
