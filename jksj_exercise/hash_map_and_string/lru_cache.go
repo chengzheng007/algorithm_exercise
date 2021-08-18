@@ -73,9 +73,9 @@ func (lch *lruCache) Get(k string) int {
 func (lch *lruCache) addNode(node *dblistNode) {
 	node.next = lch.root.next
 	node.prev = lch.root
-	// 因为这个指向，导致最初第一个节点插入的时候，新增节点永远在head后面，且lch.root.prev指向第一个插入的节点
+	// 因为这个指向，导致最初第一个节点插入的时候，新增节点永远在root后面，且lch.root.prev指向第一个插入的节点
 	// 由于增加节点永远在lch.root.head后面，所以无论增加多少节点，lch.root.prev也不会被修改，永远是指向的尾节点
-	// lch.root.pre就是尾节点
+	// lch.root.prev就是尾节点
 	node.next.prev = node
 	lch.root.next = node
 }
