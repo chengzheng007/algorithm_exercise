@@ -13,21 +13,17 @@ func minPathSum(grid [][]int) int {
         dp[i] = make([]int, cols)
     }
     
-    // 初始化
-    dp[0][0] = grid[0][0]
-    for j := 1; j < cols; j++ {
-        dp[0][j] = dp[0][j-1] + grid[0][j]
-    }
-    for i := 1; i < rows; i++ {
-        dp[i][0] = dp[i-1][0] + grid[i][0]
-    }
-    
-    
     // dp[i][j] = min{dp[i-1][j],dp[i][j-1]}+grid[i][j]
-    // 从1开始是为了方便在for循环统一判断，但是if条件相对复杂
-    for i := 1; i < rows; i++ {
-        for j := 1; j < cols; j++ {
-            if dp[i-1][j] < dp[i][j-1] {
+    
+    for i := 0; i < rows; i++ {
+        for j := 0; j < cols; j++ {
+            if i == 0 && j == 0 {
+                dp[i][j] = grid[i][j]
+            } else if i == 0 {
+                dp[i][j] = grid[i][j] + dp[i][j-1]
+            } else if j == 0 {
+                dp[i][j] = grid[i][j] + dp[i-1][j]
+            } else if dp[i-1][j] < dp[i][j-1] {
                 dp[i][j] = grid[i][j]+dp[i-1][j]
             } else {
                 dp[i][j] = grid[i][j]+dp[i][j-1]
