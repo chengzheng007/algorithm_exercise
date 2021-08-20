@@ -3,6 +3,38 @@
  *
  * [300] Longest Increasing Subsequence
  */
+
+func lengthOfLIS(nums []int) int {
+    size := len(nums)
+    if size <= 1 {
+        return size
+    }
+    
+    dp := make([]int, size)    
+    for i := 0; i < size; i++ {
+        dp[i] = 1
+    }
+    
+    max := dp[0]
+    for i := 1; i < size; i++ {
+        for j := 0; j < i; j++ {
+	    // nums[j]<nums[j]，意味着下标为j的数可能会贡献递增的序列
+	    // 但是这里要扫描完所有比nums[i]小的数取最大的贡献值
+	    // 而不是取第一个比nums[i]小的子问题解+1就break
+	    // 因为可能i的前一个数就已经是当前最后一个递增数，也可能前面几个数才是针对当前数一直递增的
+	    // 比如3, 1, 6, 4, 10，10比4大，但是最长的是1,6,10或1,4,10或3,6,10	
+            if nums[i] > nums[j] && dp[i] < dp[j]+1 {
+                dp[i] = dp[j]+1
+            }
+        }
+        if dp[i] > max {
+            max = dp[i]
+        }
+    }
+
+    return max
+}
+
 func lengthOfLIS(nums []int) int {
 	size := len(nums)
 	if size <= 1 {
