@@ -1,3 +1,46 @@
+// 此方法更好懂
+func numDecodings(s string) int {
+    size := len(s)
+    if size == 0 {
+        return 0
+    }
+    prev := s[0] - '0'
+    if prev == 0 {
+        return 0
+    }
+    if size == 1 {
+        return 1                      
+    }
+    
+    dp := make([]int, size+1)
+    for i := 0; i <= size; i++ {
+        dp[i] = 1
+    }
+    
+    for i := 2; i <= size; i++ {
+        curr := s[i-1] - '0'
+        if (prev == 0 || prev > 2) && curr == 0 {
+            return 0
+        }
+        
+        if prev < 2 && prev > 0 || prev == 2 && curr < 7 {
+            if curr > 0 {
+                // 可以从i-2取两个字符过来，也可从i-1取1一个过来，类似爬楼梯/斐波那契
+                // 根据各种不同情况算dp[i]，所以还是弄清楚
+                // 字符串/题设的规律，才能写的出dp转移代码
+                dp[i] = dp[i-2]+dp[i-1]
+            } else { // 10,20，此时只能连续取两位
+                dp[i] = dp[i-2]
+            }
+        } else {
+            dp[i] = dp[i-1]
+        }
+        prev = curr
+    }
+
+    return dp[size]
+}
+
 
 func numDecodings(s string) int {
 	n := len(s)
