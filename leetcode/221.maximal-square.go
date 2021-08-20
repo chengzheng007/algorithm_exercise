@@ -2,14 +2,14 @@
 对于在矩阵内搜索正方形或长方形的题型，一种常见的做法是定义一个二维dp数组，其中
 dp[i][j]表示满足题目条件的、以(i, j)为右下角的正方形或者长方形的属性。对于本题，则表示
 以(i, j)为右下角的全由1构成的最大正方形面积。如果当前位置是0，那么dp[i][j]即为0；如果
-当前位置是1，我们假设dp[i][j] = k2，其充分条件为dp[i-1][j-1]、dp[i][j-1]和dp[i-1][j]的值必须
-都不小于(k-1)2，否则 (i, j) 位置不可以构成一个边长为k的正方形。同理，如果这三个值中的
-的最小值为k-1，则(i, j) 位置一定且最大可以构成一个边长为k的正方形
+当前位置是1，我们假设dp[i][j] = k^2（^表示平方），其充分条件为dp[i-1][j-1]、dp[i][j-1]和dp[i-1][j]的值必须
+都不小于(k-1)^2，否则(i, j)位置不可以构成一个边长为k的正方形。同理，如果这三个值中的
+的最小值为k-1，则(i, j)位置一定且最大可以构成一个边长为k的正方形
 */
 func maximalSquare(matrix [][]byte) int {
     // dp[i][j]表示以坐标点(i,j)为右下角的图形
     // 能形成最大正方形的变长，可得方程
-    // dp(i,j) = min(dp[i-1,j-1],dp[i,j-1],dp[i-1,j]),matrix[i][j] = 1
+    // dp(i,j) = min(dp[i-1,j-1],dp[i,j-1],dp[i-1,j])+1,matrix[i][j] = 1
     // dp[i][j] = 0, matrix[i][j] != 1
     
     rows := len(matrix)
@@ -30,7 +30,7 @@ func maximalSquare(matrix [][]byte) int {
     for i := 1; i <= rows; i++ {
         for j := 1; j <= cols; j++ {
             if matrix[i-1][j-1] == '1' {
-                dp[i][j] = getMin(dp[i-1][j-1], dp[i-1][j], dp[i][j-1]) + 1
+                dp[i][j] = getMin(dp[i-1][j-1], dp[i-1][j], dp[i][j-1]) + 1 // 利用dp数组多出来的空间值为0，从而不必担心图形边缘的赋值问题
             }
             if dp[i][j] > maxlen {
                 maxlen = dp[i][j]
