@@ -31,3 +31,24 @@ func oddEvenList(head *ListNode) *ListNode {
 	pOdd.Next = h2.Next
 	return h1.Next
 }
+
+// 思路:将奇数、偶数的结点直接指向下一个奇数、偶数结点
+// 然后把奇数的末尾连接偶数的开头
+func oddEvenList(head *ListNode) *ListNode {
+    if head == nil || head.Next == nil {
+        return head
+    }
+    
+    odd := head
+    even := head.Next
+    evenHead := even
+    // even偶数结点更靠后，先到达末尾
+    for even != nil && even.Next != nil {
+        odd.Next = odd.Next.Next
+        even.Next = even.Next.Next
+        odd = odd.Next
+        even = even.Next
+    }
+    odd.Next = evenHead
+    return head
+}
