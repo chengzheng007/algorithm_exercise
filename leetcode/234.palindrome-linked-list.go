@@ -37,6 +37,7 @@ func isPalindrome(head *ListNode) bool {
     slow = reverse(slow)
     fast = head
         
+    // 两部分遍历比较，奇数结点数的话，slow指向的链表先到末尾
     for slow != nil {
         if slow.Val != fast.Val {
             return false
