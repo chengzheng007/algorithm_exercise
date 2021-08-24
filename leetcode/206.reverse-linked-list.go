@@ -34,3 +34,25 @@ func reverseRecur(p *ListNode, head *ListNode) {
 	p.Next = nil
 }
 
+// 更简单的尾递归
+func reverseList(head *ListNode) *ListNode {
+    if head == nil || head.Next == nil {
+        return head
+    }
+    node := reverseList(head.Next)
+    head.Next.Next = head
+    head.Next = nil
+    return node
+}
+
+// 非递归-从头遍历形式
+func reverseList(head *ListNode) *ListNode {
+   var prev, next *ListNode
+    for head != nil {
+        next = head.Next
+        head.Next = prev
+        prev = head
+        head = next
+    }
+    return prev
+}
