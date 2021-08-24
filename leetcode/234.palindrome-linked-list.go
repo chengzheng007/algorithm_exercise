@@ -10,50 +10,50 @@
  *     Next *ListNode
  * }
  */
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
 func isPalindrome(head *ListNode) bool {
-	if head == nil {
-		return true
-	}
-	newh := new(ListNode)
-	newh.Next = head
-	middleNode := newh
-	endNode := newh
-	// 寻找中间节点和结束节点
-	// 注意：循环结束，endNode不一定指向结尾，可能为nil，当节点个数为计数时
-	for endNode != nil && endNode.Next != nil {
-		middleNode = middleNode.Next
-		endNode = endNode.Next.Next
-	}
-
-	// 翻转链表后半部分
-	p := middleNode
-	var q *ListNode
-	if p != nil {
-		q = p.Next
-	}
-	for q != nil {
-		// 翻转遍历时查找真正的尾节点
-		endNode = q
-
-		r := q.Next
-		q.Next = p
-		p = q
-		q = r
-	}
-
-	// 从两边向中间遍历比较，注意break退出条件
-	p = head
-	q = endNode
-	for p != nil && q != nil {
-		if p.Val != q.Val {
-			return false
-		}
-		if p == middleNode || q == middleNode {
-			break
-		}
-		p = p.Next
-		q = q.Next
-	}
-	return true
+    if head == nil || head.Next == nil {
+        return true
+    }
+    
+    slow := head
+    fast := head
+    for fast != nil && fast.Next != nil {
+        slow = slow.Next
+        fast = fast.Next.Next
+    }
+    // 寻找中间节点slow，若是偶数，slow指向中间偏后一个节点
+    if fast != nil { // 表示链表为奇数个节点，slow刚好指向中间节点（1->2->3->2->1，fast指向最后的1，slow指向3）
+        slow = slow.Next // 将slow移动至下一个节点 
+    }
+    
+    // slow及之后进行反转，反转算法自动断开连接
+    slow = reverse(slow)
+    fast = head
+        
+    for slow != nil {
+        if slow.Val != fast.Val {
+            return false
+        }
+        slow = slow.Next
+        fast = fast.Next
+    }
+    
+    return true
 }
 
+func reverse(head *ListNode) *ListNode {
+    if head == nil || head.Next == nil {
+        return head
+    }
+    node := reverse(head.Next)
+    head.Next.Next = head
+    head.Next = nil
+    return node
+}
