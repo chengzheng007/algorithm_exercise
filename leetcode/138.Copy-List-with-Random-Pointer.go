@@ -6,7 +6,8 @@
  *     Random *Node
  * }
  */
-
+// 参考该解法下面的高赞解释
+// https://leetcode.com/problems/copy-list-with-random-pointer/discuss/43491/A-solution-with-constant-space-complexity-O(1)-and-linear-time-complexity-O(N)
 func copyRandomList(head *Node) *Node {
     // 1.复制一份，新节点穿插在原始结点后面
     if head == nil {
