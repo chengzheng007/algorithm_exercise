@@ -3,6 +3,49 @@
  *
  * [33] Search in Rotated Sorted Array
  */
+// 对比下面更易理解
+func search(nums []int, target int) int {
+    length := len(nums)
+    low := 0
+    high := length-1
+    
+    // 找到翻转数组的最小值所在索引
+    // 翻转点的后面一个值
+    for low < high {
+        mid := (low+high)/2
+        // 中点数字比高点数字大，说明左边已经有序
+        // 那么最小值肯定在右侧
+        if nums[mid] > nums[high] {
+            low = mid+1
+        } else { // 否则往左侧找，注意这里high不能赋为mid-1，可能就是mid
+            high = mid 
+        }
+    }
+    // 记录最小值/分界点索引
+    pivotIdx := low
+    
+    // 确定target在分界点的哪一边，转换为普通二分查找！
+    if nums[pivotIdx] <= target && nums[length-1] >= target {
+        low = pivotIdx
+        high = length-1
+    } else {
+        low = 0
+        high = pivotIdx
+    }
+    for low <= high {
+        mid := (low+high)/2
+        if nums[mid] == target {
+            return mid
+        } else if nums[mid] < target {
+            low = mid+1
+        } else {
+            high = mid-1
+        }
+    }
+    
+    return -1
+}
+
 func search(nums []int, target int) int {
 	// 先找出翻转后的分界点索引
 	// 或者说找到数组中最小数的索引
