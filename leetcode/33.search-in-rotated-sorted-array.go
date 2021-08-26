@@ -5,6 +5,7 @@
  */
 func search(nums []int, target int) int {
 	// 先找出翻转后的分界点索引
+	// 或者说找到数组中最小数的索引
 	size := len(nums)
 	lo := 0
 	hi := size - 1
