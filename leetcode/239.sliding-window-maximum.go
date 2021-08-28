@@ -8,7 +8,7 @@ func maxSlidingWindow(nums []int, k int) []int {
         return []int{}
     }
     res := make([]int, len(nums)-k+1) // 可以提前分配好空间
-    // dq为double queue，存储的是元素下标（非元素值）
+    // dq为double ended queue，双端队列，首尾可进进出，这里存储的是元素下标（非元素值）
     dq := make([]int, 0)    
     
     for i, num := range nums {
