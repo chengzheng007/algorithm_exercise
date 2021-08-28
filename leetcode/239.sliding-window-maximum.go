@@ -3,34 +3,37 @@
  *
  * [239] Sliding Window Maximum
  */
-func maxSlidingWindow(nums []int, k int) []int {
-	// q:双端队列，存储数组元素的下标
-	// 维持q内下标的元素单调递减，每次取队头比较
-	q := make([]int, 0)
-	res := make([]int, 0)
-	for idx, num := range nums {
-		// 如果当前位置比队列头部元素多出k个元素，删除多余元素
-		if len(q) > 0 && idx-q[0] >= k {
-			q = q[1:]
-		}
+func maxSlidingWindow(nums []int, k int) []int {    
+    if len(nums) == 0 {
+        return []int{}
+    }
+    res := make([]int, len(nums)-k+1) // 可以提前分配好空间
+    // dq为double queue，存储的是元素下标（非元素值）
+    dq := make([]int, 0)    
+    
+    for i, num := range nums {
+        // 保持窗口单调递减
+        // 移除队尾比当前小的元素
+        length := len(dq)
+        for length > 0 && nums[dq[length-1]] < num {
+            dq = dq[:length-1]
+            length--
+        }
+        
+        dq = append(dq, i)
+        
+        // 移除多出窗口数目的元素，即双端队列的队头元素
+        length = len(dq)
+        // 或判断下标：i-dq[0] == k
+        if length > 0 && i-dq[0]+1 > k {
+            dq = dq[1:]
+        }
+        
+        if i >= k-1 {
+            res[i-k+1] = nums[dq[0]]
+            // res = append(res, nums[dq[0]])
+        }
+    }
 
-		// 删除尾部比当前元素小的
-		for len(q) > 0 {
-			l := len(q)
-			if nums[q[l-1]] < num {
-				q = q[:l-1]
-			} else {
-				break
-			}
-		}
-
-		q = append(q, idx)
-
-		if idx >= k-1 {
-			// 追加最大的数字到结果集
-			res = append(res, nums[q[0]])
-		}
-	}
-
-	return res
+    return res
 }
