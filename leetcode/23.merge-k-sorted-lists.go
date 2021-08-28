@@ -12,6 +12,62 @@ import "container/heap"
  *     Next *ListNode
  * }
  */
+
+// ##########   分治法（递归实现）   #########
+// 本质是转换为两个链表的合并
+func mergeKLists(lists []*ListNode) *ListNode {
+    n := len(lists)
+    if n == 0 {
+        return nil
+    }
+    if n == 1 { // 不用合并
+        return lists[0]
+    }
+    return mergeExec(lists, 0, n-1)
+}
+
+func mergeExec(lists []*ListNode, low, high int) *ListNode {
+    if low == high {
+        return lists[low]
+    }
+    mid := (low+high)/2
+    leftPart := mergeExec(lists, low, mid)
+    rightPart := mergeExec(lists, mid+1, high)
+    return mergeTwoList(leftPart, rightPart)
+}
+
+func mergeTwoList(l1, l2 *ListNode) *ListNode {
+    if l1 == nil {
+        return l2
+    }
+    if l2 == nil {
+        return l1
+    }
+    
+    head := &ListNode{}
+    ph := head
+    p := l1
+    q := l2
+    for p != nil && q != nil {
+        if p.Val < q.Val {
+            ph.Next = p
+            p = p.Next
+        } else {
+            ph.Next = q
+            q = q.Next
+        }
+        ph = ph.Next
+    }
+    if p != nil {
+        ph.Next = p
+    } else {
+        ph.Next = q
+    }
+    return head.Next
+}
+
+
+// #########     每次取最小堆堆顶加到链表后面      #########
 type SmallTopHeap []*ListNode
 
 func (bth SmallTopHeap) Len() int           { return len(bth) }
