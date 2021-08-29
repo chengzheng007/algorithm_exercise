@@ -19,7 +19,7 @@ func search(nums []int, target int) bool {
         
         if nums[low] == nums[mid] {
             low++
-	} else if nums[mid] <= nums[high] { // !!注意:此处须<=，否则报错
+	} else if nums[mid] <= nums[high] { // !!注意:此处须<=，否则报错，因本题规定可能有元素相同的
             if target > nums[mid] && target <= nums[high] {
                 low = mid+1
             } else {
