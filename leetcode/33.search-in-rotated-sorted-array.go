@@ -21,9 +21,9 @@ func search(nums []int, target int) int {
             return mid
         }
         
-        if nums[low] == nums[mid] {
+        if nums[low] == nums[mid] { // 本题规定元素值均不相同，第一个if可以判断拿掉
             low++
-        } else if nums[mid] < nums[high] {
+        } else if nums[mid] < nums[high] { // 本题规定所有元素值不同
             if target > nums[mid] && target <= nums[high] {
                 low = mid+1
             } else {
