@@ -13,6 +13,6 @@ func myPow(x float64, n int) float64 {
         return myPow(x*x, n/2)
     }
     
-    // 基数次幂
+    // 奇数次幂
     return x*myPow(x*x, n/2)
 }
