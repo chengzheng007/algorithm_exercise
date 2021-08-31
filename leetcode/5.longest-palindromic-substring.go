@@ -18,6 +18,7 @@ func longestPalindrome(s string) string {
 		for j := i; j < size; j++ {
 			// 当前首尾的字母相同
 			// j-i<3：当子串长度小于3时，不需要检测他的子串（不检测边界）
+			// 不管中间是什么字符，只要首尾相同，因为长度子串长度<=3
 			// dp[i+1][j-1]，当长度大于等于3时，[i,j]的子串也必须是回文串
 			if s[i] == s[j] && (j-i < 3 || dp[i+1][j-1]) {
 				dp[i][j] = true
