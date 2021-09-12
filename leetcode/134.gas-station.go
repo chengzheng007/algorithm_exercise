@@ -23,14 +23,14 @@ func canCompleteCircuit(gas []int, cost []int) int {
 func canCompleteCircuit(gas []int, cost []int) int {
     n := len(gas)
     for start := 0; start < n; start++ {
-        // 当前储存的油气，如果道不了下一站，直接从下一站开始找
+        // 当前储存的油气，如果到不了下一站，直接从下一站开始检测起点
         store := gas[start] - cost[start]
         if store < 0 {
             continue
         }
         station := (start+1)%n
         for station != start {
-            // 计算station这一站的油气余量
+            // 计算到station下一站的油气余量
             store = store + gas[station] - cost[station]
             if store < 0 {
                 break
