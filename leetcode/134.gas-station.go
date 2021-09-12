@@ -20,22 +20,27 @@ func canCompleteCircuit(gas []int, cost []int) int {
 }
 
 // O(n^2)
-// func canCompleteCircuit(gas []int, cost []int) int {
-//     n := len(gas)
-//     for i := 0; i < n; i++ {
-//         curr := gas[i]
-//         j := (i+1)%n
-//         for ; j != i; j = (j+1)%n {
-//             if curr - cost[(j-1+n)%n] < 0 {
-//                 // 无法到达下一站
-//                 break
-//             }
-//             curr = curr-cost[(j-1+n)%n]+gas[j]
-//         }
-//         // 验证最后一站是否能到达
-//         if j == i && curr-cost[(j-1+n)%n] >= 0 {
-//             return i
-//         }
-//     }
-//     return -1
-// }
+func canCompleteCircuit(gas []int, cost []int) int {
+    n := len(gas)
+    for start := 0; start < n; start++ {
+        // 当前储存的油气，如果道不了下一站，直接从下一站开始找
+        store := gas[start] - cost[start]
+        if store < 0 {
+            continue
+        }
+        station := (start+1)%n
+        for station != start {
+            // 计算station这一站的油气余量
+            store = store + gas[station] - cost[station]
+            if store < 0 {
+                break
+            }
+            station = (station+1)%n
+        }
+        // 能到达最开始的站点
+        if station == start {
+            return start
+        }
+    }
+    return -1
+}
