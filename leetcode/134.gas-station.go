@@ -1,22 +1,27 @@
 func canCompleteCircuit(gas []int, cost []int) int {
-	start := len(gas) - 1
-	end := 0
-	sum := gas[start] - cost[start]
-	for start > end {
-		if sum >= 0 {
-			sum += gas[end] - cost[end]
-			end++
-		} else {
-			start--
-			sum += gas[start] - cost[start]
-		}
-	}
-
-	if sum >= 0 {
-		return start
-	}
-
-	return -1
+    // O(N)的解法是，设置两个变量，sum判断当前的指针的有效性
+    // total 则判断整个数组是否有解
+    // 有就返回通过 sum 得到的下标，没有则返回 -1
+    // total为所有的gas相加，减去所有的cost，只有这个差值大于等于0
+    // 才可能存在解
+    var (
+        total, sum int
+        start int
+    )
+    for i := 0; i < len(gas); i++ {
+        sum = sum + gas[i] - cost[i]
+        total += gas[i] - cost[i]
+        if sum < 0 {
+            start = i+1
+            sum = 0
+        }
+    }
+    
+    if total >= 0 {
+        return start
+    }
+    
+    return -1
 }
 
 // O(n^2)
