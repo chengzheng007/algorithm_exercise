@@ -1,127 +1,163 @@
 package main
 
-import (
-	"encoding/json"
-	"errors"
-	"fmt"
-)
+import "fmt"
 
-var (
-	// ErrCacheCap indicate cache size must great than zero
-	ErrCacheCap = errors.New("invalid lru cache capacity")
-)
+func main() {
+	lruCache := NewLRU(2)
+	lruCache.Put(1, 1)
+	lruCache.Put(2, 2)
+	fmt.Printf("1 cached value:%v\n", lruCache.GetAllValues())
 
-type lruCache struct {
-	capacity int
-	count    int
-	hashMap  map[string]*dblistNode
-	// 双向链表
-	root     *dblistNode
+	val := lruCache.Get(1)
+	fmt.Printf("key 1, val:%v\n", val)
+	fmt.Printf("2 cached value:%v\n", lruCache.GetAllValues())
+
+	lruCache.Put(3, 3)
+	fmt.Printf("3 cached value:%v\n", lruCache.GetAllValues())
+
+	val = lruCache.Get(2)
+	fmt.Printf("key 2, val:%v\n", val)
+
+	// 覆盖key为1的值
+	lruCache.Put(1, 99)
+	fmt.Printf("4 cached value:%v\n", lruCache.GetAllValues())
 }
 
-type dblistNode struct {
-	Key  string
-	Val  int
-	prev *dblistNode
-	next *dblistNode
+// lru-最近最少使用，使用链表（双向）和hashmap组成的结构，主要对外暴露方法为get、put
+// 最近访问的将提升到链表尾部，最不常访问的将退到链表表头（尾部加入节点，头部删除节点）
+
+type LRU struct {
+	hashmap map[int]*doubleListNode
+	dblist  *doubleList // 双向链表
+	cap     int // lru缓存的容量
 }
 
-func NewLruCache(capacity int) (*lruCache, error) {
-	if capacity <= 0 {
-		return nil, ErrCacheCap
+func NewLRU(cap int) *LRU {
+	if cap <= 0 {
+		panic("invalid cap")
 	}
-	lch := &lruCache{
-		capacity: capacity,
-		hashMap:  make(map[string]*dblistNode, capacity),
-		root:     &dblistNode{},
-	}
-	lch.root.next = lch.root
-	lch.root.prev = lch.root
-	return lch, nil
-}
-
-func (lch *lruCache) Set(k string, v int) {
-	if node, ok := lch.hashMap[k]; ok && node != nil {
-		lch.removeNode(node)
-		node.Val = v
-		lch.addNode(node)
-		return
-	}
-
-	node := &dblistNode{Key: k, Val: v}
-	lch.addNode(node)
-	lch.hashMap[k] = node
-	lch.count++
-
-	if lch.count > lch.capacity {
-		tail := lch.popTail()
-		delete(lch.hashMap, tail.Key)
-		lch.count--
+	return &LRU{
+		hashmap: make(map[int]*doubleListNode),
+		dblist:  newDoubleList(),
+		cap:     cap,
 	}
 }
 
-func (lch *lruCache) Get(k string) int {
-	node, ok := lch.hashMap[k]
+// 找不到key时返回-1
+func (lru *LRU) Get(key int) int {
+	node, ok := lru.hashmap[key]
 	if !ok {
 		return -1
 	}
-	lch.moveToHead(node)
-	return node.Val
+	// 将结点调至最近访问的位置
+	lru.dblist.remove(node)
+	lru.dblist.addLast(node)
+	return node.val
 }
 
-// addNode put node after root
-func (lch *lruCache) addNode(node *dblistNode) {
-	node.next = lch.root.next
-	node.prev = lch.root
-	// 因为这个指向，导致最初第一个节点插入的时候，新增节点永远在root后面，且lch.root.prev指向第一个插入的节点
-	// 由于增加节点永远在lch.root.head后面，所以无论增加多少节点，lch.root.prev也不会被修改，永远是指向的尾节点
-	// lch.root.prev就是尾节点
-	node.next.prev = node
-	lch.root.next = node
-}
-
-// remove do remove node from double list
-func (lch *lruCache) removeNode(node *dblistNode) {
-	if node == nil {
+func (lru *LRU) Put(key, val int) {
+	node, ok := lru.hashmap[key]
+	// 如果lru缓存中存在结点，将其调整到最近访问的位置
+	if ok {
+		lru.dblist.remove(node)
+		// 复用该结点，更新value值
+		node.val = val
+		lru.dblist.addLast(node)
 		return
 	}
-	node.next.prev = node.prev
+
+	// 若不存在，尝试加入结点
+	// 超过lru缓存容量，则删除最老结点，包括hashmap中的key
+	if lru.cap == lru.dblist.nodeSize() {
+		delNode := lru.dblist.removeFirst()
+		delete(lru.hashmap, delNode.key)
+	}
+
+	newNode := &doubleListNode{key: key, val: val}
+	lru.dblist.addLast(newNode)
+	lru.hashmap[key] = newNode
+}
+
+func (lru LRU) GetAllValues() [][]int {
+	return lru.dblist.getNodeValue()
+}
+
+type doubleList struct {
+	head *doubleListNode // 头结点指向双向链表中第一个结点，尾节点指向最后一个
+	tail *doubleListNode // 最近访问/设置的结点在链表尾部
+	size int             // 节点个数
+}
+
+func newDoubleList() *doubleList {
+	dblist := &doubleList{
+		head: &doubleListNode{},
+		tail: &doubleListNode{},
+	}
+	// 为空时头结点的next指向尾结点
+	// 尾节点的prev指向头结点
+	dblist.head.next = dblist.tail
+	dblist.tail.prev = dblist.head
+	return dblist
+}
+
+// 双向链表结构如下，新添加在尾部，作为最近访问的数据，待删除的在头部，作为老数据
+// |head| -> |k1| -> |k2| -> |k3| -> |tail|
+// |    | <- |v1| <- |v2| <- |v3| <- |    |
+// 添加结点至尾部
+func (dblist *doubleList) addLast(node *doubleListNode) {
+	if node == nil {
+		panic("add nil node")
+	}
+	// 待加入结点链接到尾部
+	node.prev = dblist.tail.prev
+	node.next = dblist.tail
+	// 修改原来尾节点处相关的前后指针
+	dblist.tail.prev.next = node
+	dblist.tail.prev = node
+
+	dblist.size++
+}
+
+func (dblist *doubleList) remove(node *doubleListNode) {
 	node.prev.next = node.next
+	node.next.prev = node.prev
 	node.prev = nil
 	node.next = nil
+	dblist.size--
 }
 
-// moveToHead do move node to head of list
-func (lch *lruCache) moveToHead(node *dblistNode) {
-	lch.removeNode(node)
-	lch.addNode(node)
-}
-
-// popTail do pop tail node of list
-func (lch *lruCache) popTail() *dblistNode {
-	// 双向循环链表，决定了root.prev指向的是链表的最后一个节点
-	node := lch.root.prev
-	// no node in list
-	if node == lch.root {
+// 删除第一个结点
+func (dblist *doubleList) removeFirst() *doubleListNode {
+	// 链表为空
+	if dblist.head.next == dblist.tail {
 		return nil
 	}
-	lch.removeNode(node)
-	return node
+	firstNode := dblist.head.next
+	dblist.remove(firstNode)
+	return firstNode
 }
 
-func (lch lruCache) Print() {
-	type tempStruct struct {
-		K string `json:"key"`
-		V int    `json:"val"`
+func (dblist doubleList) nodeSize() int {
+	return dblist.size
+}
+
+func (dblist doubleList) getNodeValue() [][]int {
+	if dblist.size == 0 {
+		return nil
 	}
-	list := make([]*tempStruct, lch.count)
+	values := make([][]int, dblist.size)
 	i := 0
-	p := lch.root.next
-	for p != lch.root && p != nil {
-		list[i] = &tempStruct{K: p.Key, V: p.Val}
+	p := dblist.head.next
+	for p != nil && p != dblist.tail {
+		values[i] = []int{p.key, p.val}
 		p = p.next
 		i++
 	}
-	jstr, _ := json.Marshal(list)
-	fmt.Printf("elems num:%d, val:%s\n", lch.count, jstr)
+	return values
+}
+
+// 双向链表结点
+type doubleListNode struct {
+	key, val   int
+	prev, next *doubleListNode
 }
