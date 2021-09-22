@@ -3,7 +3,6 @@
  *
  * [66] Plus One
  */
-// 更易理解的、直观的做法
 func plusOne(digits []int) []int {
     carry := 0
     n := len(digits)
@@ -29,28 +28,3 @@ func plusOne(digits []int) []int {
     
     return newDigits
 }
-
-
-func plusOne(digits []int) []int {
-	if len(digits) == 0 {
-		return digits
-	}
-	num := 0
-	unit := 1
-	for i := len(digits) - 1; i >= 0; i-- {
-		num += digits[i] * unit
-		unit *= 10
-	}
-	num += 1
-	newDigits := make([]int, 0)
-	for num > 0 {
-		newDigits = append(newDigits, num%10)
-		num /= 10
-	}
-	// 翻转
-	for i := 0; i < len(newDigits)/2; i++ {
-		newDigits[i], newDigits[len(newDigits)-i-1] = newDigits[len(newDigits)-i-1], newDigits[i]
-	}
-	return newDigits
-}
-
