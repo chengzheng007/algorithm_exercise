@@ -8,7 +8,7 @@ func grayCode(n int) []int {
     res := make([]int, 1)
     for i := 0; i < n; i++ {
         highestBit := 1 << i
-        for j := len(res)-1; j >= 0; j-- { //要反着遍历，才能对称
+        for j := len(res)-1; j >= 0; j-- { // 要反着遍历，才能对称
             res = append(res, highestBit|res[j])
         }
     }
